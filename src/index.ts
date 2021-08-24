@@ -4,6 +4,10 @@ import { Client, Intents } from 'discord.js';
 dotenv.config();
 const TOKEN = process.env.TOKEN;
 
+process.on('SIGINT', () => {
+    process.exit(0);
+});
+
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
 });
