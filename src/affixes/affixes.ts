@@ -4,7 +4,11 @@ export interface AffixDefinition {
   description: string;
 }
 
-export default {
+export interface AllAffixDefinitions {
+  [name: string]: AffixDefinition;
+}
+
+const Affixes: AllAffixDefinitions = {
   Tyrannical: {
     id: 9,
     name: 'Tyrannical',
@@ -25,6 +29,36 @@ export default {
     name: 'Volcanic',
     description: 'While in combat, enemies periodically cause gouts of flame to erupt beneath the feet of distant players'
   },
+  Necrotic: {
+    id: 4,
+    name: 'Necrotic',
+    description: 'All enemies melee attacks apply a stacking blight that inflicts damage over time and reduces healing received'
+  },
+  Bolstering: {
+    id: 7,
+    name: 'Bolstering',
+    description: 'When any non-boss enemy dies, its death cry empowers nearby allies, increasing their maximum health by 15% and damage by 20%'
+  },
+  Quaking: {
+    id: 14,
+    name: 'Quaking',
+    description: 'Periodically, all players emit a shockwave, inflicting damage and interrupting nearby allies'
+  },
+  Sanguine: {
+    id: 8,
+    name: 'Sanguine',
+    description: 'When slain, non-boss enemies leave behind a lingering pool of ichor that heals their allies and damages players'
+  },
+  Storming: {
+    id: 124,
+    name: 'Storming',
+    description: 'While in combat, enemies periodically summon damaging whirlwinds'
+  },
+  Raging: {
+    id: 6,
+    name: 'Raging',
+    description: 'Non-boss enemies enrage at 30% health remaining, dealing 75% increased damage until defeated'
+  },
   Spiteful: {
     id: 123,
     name: 'Spiteful',
@@ -35,9 +69,21 @@ export default {
     name: 'Grievous',
     description: 'Injured players suffer increasing damage over time until healed'
   },
+  Explosive: {
+    id: 13,
+    name: 'Explosive',
+    description: 'While in combat, enemies periodically summon Explosive Orbs that will detonate if not destroyed'
+  },
+  Inspiring: {
+    id: 122,
+    name: 'Inspiring',
+    description: 'Some non-boss enemies have an inspiring presence that strengthens their allies'
+  },
   Tormented: {
     id: 128,
     name: 'Tormented',
     description: 'Servants of the Jailer can be found throughout the dungeon and grant powerful boons when defeated. If a servant is not dealt with, they empower the final boss'
   }
 };
+
+export default Affixes;

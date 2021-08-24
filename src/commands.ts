@@ -1,6 +1,7 @@
 import type { TextBasedChannels } from 'discord.js';
 
 import help from './commands/help';
+import affixes from './commands/affixes';
 import type { CommandManifest } from './commands/module';
 
 export type CommandCallback = (channel: TextBasedChannels) => void;
@@ -9,7 +10,8 @@ export type Command =
   | null;
 
 const commandsList = new Map<string, CommandManifest>(Object.entries({
-  'help': help
+  'help': help,
+  'affixes': affixes
 }));
 
 export const parseCommand = (str: string): Command => {
