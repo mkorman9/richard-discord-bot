@@ -1,12 +1,21 @@
 import type { CommandExecutionProps, CommandManifest } from './module';
-import { getAffixesForCurrentWeek } from '../affixes/rotation';
+import { getAffixesForCurrentWeek, getAffixesForNextWeek } from '../affixes/rotation';
 
 const callback = (props: CommandExecutionProps) => {
-  const affixesList = getAffixesForCurrentWeek()
-    .map(a => `${a.name} (${a.description})`)
+  const currentWeek = getAffixesForCurrentWeek()
+    .map(a => a !== null ? `- ${a.name} (${a.description})` : '- UNKNOWN')
+    .join('\n');
+  const nextWeek = getAffixesForNextWeek()
+    .map(a => a !== null ? `- ${a.name} (${a.description})` : '- UNKNOWN')
     .join('\n');
 
-  props.channel.send(affixesList);
+  props.channel.send(
+    `Affixes for the current week:\n` +
+    `${currentWeek}\n` +
+    `\n` +
+    `Affixes for the next week:\n` +
+    `${nextWeek}`
+  );
 };
 
 const affixes: CommandManifest = {
