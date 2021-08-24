@@ -1,30 +1,24 @@
 import dotenv from 'dotenv';
-import { Client, Intents } from 'discord.js';
+
+import bot from './bot';
+import './events';
+
+console.log('bot starting...');
 
 dotenv.config();
 const TOKEN = process.env.TOKEN;
 
+if (!TOKEN) {
+  console.log('missing TOKEN! Did you forgot to create .env?');
+  process.exit(1);
+}
+
+bot.login(TOKEN)
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
+
 process.on('SIGINT', () => {
-    process.exit(0);
-});
-
-const client = new Client({
-    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
-});
-
-console.log('bot starting');
-
-client.login(TOKEN)
-    .catch(err => {
-        console.error(err);
-    });
-
-client.on('ready', () => {
-    console.log('bot ready!');
-});
-
-client.on('message', msg => {
-    if (msg.content === 'hello richard') {
-        msg.channel.send(`hello ${msg.author.username}!`);
-    }
+  process.exit(0);
 });
