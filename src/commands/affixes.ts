@@ -6,7 +6,7 @@ import { TIMEZONE } from '../config';
 import twig from '../templates';
 
 const callback = (props: CommandExecutionProps) => {
-  const now = moment().tz(TIMEZONE).add(1, 'week');
+  const now = moment().tz(TIMEZONE);
   const rotation = getRotationForDate(now);
 
   twig.render('affixes.twig', {
