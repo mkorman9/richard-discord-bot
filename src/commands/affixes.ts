@@ -8,7 +8,7 @@ const callback = (props: CommandExecutionProps) => {
     .map(a => `- ${a.name} (${a.description})`)
     .join('\n');
 
-  props.channel.send(
+  props.trigger.channel.send(
     `Affixes for the current week (start ${rotation.week.weekStart.format('YYYY-MM-DD')}):\n` +
     `${affixes}\n`
   );

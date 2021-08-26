@@ -1,10 +1,10 @@
-import type { TextBasedChannels } from 'discord.js';
+import type { Message } from 'discord.js';
 
 import help from './commands/help';
 import affixes from './commands/affixes';
 import type { CommandManifest } from './commands/module';
 
-export type CommandCallback = (channel: TextBasedChannels) => void;
+export type CommandCallback = (trigger: Message) => void;
 export type Command =
   CommandCallback
   | null;
@@ -14,7 +14,7 @@ const commandsList = new Map<string, CommandManifest>(Object.entries({
   'affixes': affixes
 }));
 
-export const parseCommand = (str: string): Command => {
+const parseCommand = (str: string): Command => {
   const parts = str.split(' ').filter(p => p.length > 0);
   if (!parts) {
     return null;
@@ -27,12 +27,22 @@ export const parseCommand = (str: string): Command => {
     return null;
   }
 
-  return (channel: TextBasedChannels) => {
+  return (trigger: Message) => {
     commandsList.get(command).execute({
       command,
       args,
-      channel,
+      trigger,
       commandsList
     });
   };
+};
+
+export const executeCommand = (str: string, trigger: Message): boolean => {
+  const cmd = parseCommand(str);
+  if (cmd) {
+    cmd(trigger);
+    return true;
+  }
+
+  return false;
 };

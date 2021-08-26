@@ -6,7 +6,7 @@ const callback = (props: CommandExecutionProps) => {
     msg += `${manifest.description}\n`;
   });
 
-  props.channel.send(msg);
+  props.trigger.channel.send(msg);
 };
 
 const help: CommandManifest = {

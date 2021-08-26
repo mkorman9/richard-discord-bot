@@ -1,9 +1,9 @@
-import type { TextBasedChannels } from 'discord.js';
+import type { Message } from 'discord.js';
 
 export interface CommandExecutionProps {
   command: string;
   args: string[];
-  channel: TextBasedChannels;
+  trigger: Message;
   commandsList: Map<string, CommandManifest>;
 }
 
