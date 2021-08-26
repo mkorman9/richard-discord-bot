@@ -15,7 +15,8 @@
           "skipFiles": [
               "<node_internals>/**"
           ],
-          "cwd": "${workspaceFolder}"
+          "cwd": "${workspaceFolder}",
+          "outputCapture": "std"
       }
   ]
 }

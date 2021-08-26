@@ -1,8 +1,9 @@
+import log from './log';
 import bot from './bot';
 import { executeCommand } from './commands';
 
 bot.on('ready', () => {
-  console.log('bot ready!');
+  log.info('bot ready!');
 });
 
 bot.on('messageCreate', msg => {

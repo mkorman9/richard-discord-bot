@@ -1,18 +1,19 @@
 import { TOKEN, TIMEZONE, LANGUAGE } from './config';
+import log from './log';
 import './templates';
 import bot from './bot';
 import './events';
 
 if (!TOKEN) {
-  console.log('missing TOKEN! Did you forgot to create .env?');
+  log.error('missing TOKEN! Did you forgot to create .env?');
   process.exit(1);
 }
 
-console.log(`bot starting (timezone=${TIMEZONE}, language=${LANGUAGE})...`);
+log.info(`bot starting (timezone=${TIMEZONE}, language=${LANGUAGE})...`);
 
 bot.login(TOKEN)
   .catch(err => {
-    console.error(err);
+    log.error(`error while logging in: ${err}`);
     process.exit(1);
   });
 

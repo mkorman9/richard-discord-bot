@@ -2,6 +2,7 @@ import type { Message } from 'discord.js';
 
 import help from './commands/help';
 import affixes from './commands/affixes';
+import blacklist from './commands/blacklist';
 import type { CommandManifest } from './commands/module';
 
 export type CommandCallback = (trigger: Message) => void;
@@ -11,7 +12,8 @@ export type Command =
 
 const commandsList = new Map<string, CommandManifest>(Object.entries({
   'help': help,
-  'affixes': affixes
+  'affixes': affixes,
+  'czarnolisto': blacklist
 }));
 
 const parseCommand = (str: string): Command => {
