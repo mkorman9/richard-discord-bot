@@ -1,17 +1,13 @@
-import dotenv from 'dotenv';
-
 import bot from './bot';
 import './events';
-
-console.log('bot starting...');
-
-dotenv.config();
-const TOKEN = process.env.TOKEN;
+import { TOKEN, TIMEZONE } from './config';
 
 if (!TOKEN) {
   console.log('missing TOKEN! Did you forgot to create .env?');
   process.exit(1);
 }
+
+console.log(`bot starting (timezone=${TIMEZONE})...`);
 
 bot.login(TOKEN)
   .catch(err => {
