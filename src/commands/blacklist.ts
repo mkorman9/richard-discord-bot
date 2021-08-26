@@ -92,7 +92,11 @@ const callback = (props: CommandExecutionProps) => {
   if (!cmd) {
     displayBlacklist(props);
   } else {
-    const playerName = props.args[1];
+    const playerName = (props.args[1] || '')
+      .split(' ')
+      .filter(s => s.length > 0)
+      .map(s => s[0].toUpperCase() + s.slice(1).toLowerCase())
+      .join(' ');
 
     if (cmd === 'add' || cmd === '+' || cmd === 'dodaj') {
       addToBlacklist(props, playerName, props.args.splice(2).join(' '));
