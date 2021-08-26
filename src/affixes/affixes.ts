@@ -4,11 +4,12 @@ export interface AffixDefinition {
   description: string;
 }
 
-export interface AllAffixDefinitions {
-  [name: string]: AffixDefinition;
-}
-
-const Affixes: AllAffixDefinitions = {
+const Affixes: { [name: string]: AffixDefinition } = {
+  Unknown: {
+    id: -1,
+    name: 'Unknown',
+    description: 'Not known yet'
+  },
   Tyrannical: {
     id: 9,
     name: 'Tyrannical',
