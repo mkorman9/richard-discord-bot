@@ -9,15 +9,20 @@ TOKEN=<OAuth2 token>
 
 Run:
 ```
-docker-compose up -d --build bot
+./start.sh
 ```
 
 Get logs:
 ```
-docker-compose logs
+./logs.sh
 ```
 
 Stop:
 ```
-docker-compose down
+./stop.sh
+```
+
+Purge local database:
+```
+rm -rf .db
 ```
