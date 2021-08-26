@@ -1,17 +1,21 @@
 import moment from 'moment-timezone';
 
 import type { CommandExecutionProps, CommandManifest } from './module';
-import { getRotationForDate } from '../affixes/rotation';
+import { getRotationForDate, getRotationForWeekNumber } from '../affixes/rotation';
 import { TIMEZONE } from '../config';
 import twig from '../templates';
 
 const callback = (props: CommandExecutionProps) => {
   const now = moment().tz(TIMEZONE);
-  const rotation = getRotationForDate(now);
+  const rotationThisWeek = getRotationForDate(now);
+  const rotationNextWeek = getRotationForWeekNumber(rotationThisWeek.week.weekNumber + 1);
+  const weekEnd = moment.duration(rotationNextWeek.week.weekStart.diff(now));
 
-  twig.render('affixes.twig', {
+  twig.render('affixes_default.twig', {
     now,
-    rotation
+    rotationThisWeek,
+    rotationNextWeek,
+    weekEnd
   })
     .then(output => {
       props.trigger.channel.send(output);

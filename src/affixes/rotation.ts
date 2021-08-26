@@ -1,6 +1,6 @@
 import { Moment } from 'moment';
 import Affixes from './affixes';
-import { getWeekForDate, WeekDefinition } from './weeks';
+import { getWeekForDate, getWeekForWeekNumber, WeekDefinition } from './weeks';
 import type { AffixDefinition } from './affixes';
 
 export interface WeekRotationDefinition {
@@ -31,6 +31,15 @@ const getAffixesForWeekNumber = (weekNumber: number): AffixDefinition[] => {
 
 export const getRotationForDate = (date: Moment): WeekRotationDefinition => {
   const week = getWeekForDate(date);
+
+  return {
+    affixes: getAffixesForWeekNumber(week.weekNumber),
+    week
+  };
+};
+
+export const getRotationForWeekNumber = (weekNumber: number): WeekRotationDefinition => {
+  const week = getWeekForWeekNumber(weekNumber);
 
   return {
     affixes: getAffixesForWeekNumber(week.weekNumber),

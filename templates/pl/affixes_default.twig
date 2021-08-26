@@ -1,0 +1,13 @@
+Affixy w tym tygodniu (początek {{ rotationThisWeek.week.weekStart.format('YYYY-MM-DD') }}):
+{% for affix in rotationThisWeek.affixes %}
+- {{ affix.name }} ({{ affix.description }})
+{% endfor %}
+
+Affixy w przyszłym tygodniu (początek {{ rotationNextWeek.week.weekStart.format('YYYY-MM-DD') }}):
+{% for affix in rotationNextWeek.affixes %}
+- {{ affix.name }} ({{ affix.description }})
+{% endfor %}
+
+Aktualny tydzień kończy się za {{ weekEnd.days() }} dni, {{ weekEnd.hours() }} godzin i {{ weekEnd.minutes() }} minut.
+
+{{ now.format('YYYY-MM-DD HH:mm Z') }}, numer tygodnia = {{ rotationThisWeek.week.weekNumber }}
