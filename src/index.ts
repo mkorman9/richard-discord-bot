@@ -1,6 +1,7 @@
 import { TOKEN, TIMEZONE, LANGUAGE } from './config';
 import log from './log';
 import './templates';
+import DB from './db';
 import bot from './bot';
 import './events';
 
@@ -18,5 +19,8 @@ bot.login(TOKEN)
   });
 
 process.on('SIGINT', () => {
+  log.info('bot is shutting down due to a signal');
+
+  DB.close();
   process.exit(0);
 });

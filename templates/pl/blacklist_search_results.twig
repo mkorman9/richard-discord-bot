@@ -1,0 +1,12 @@
+{% if blacklist.entries is empty %}
+Nie znalazłem podanej frazy na czarnej liście.
+{% else %}
+Podobne nazwy na czarnej liście:
+{% for entry in blacklist.entries %}
+{% if entry.reason is empty %}
+- {{ entry.player }}
+{% else %}
+- {{ entry.player }}: {{ entry.reason }}
+{% endif %}
+{% endfor %}
+{% endif %}

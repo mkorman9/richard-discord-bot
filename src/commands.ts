@@ -12,7 +12,11 @@ export type Command =
 
 const commandsList = new Map<string, CommandManifest>(Object.entries({
   'help': help,
+
   'affixes': affixes,
+  'affixy': affixes,
+
+  'blacklist': blacklist,
   'czarnolisto': blacklist
 }));
 

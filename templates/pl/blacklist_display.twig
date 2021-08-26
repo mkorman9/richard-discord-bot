@@ -1,0 +1,12 @@
+{% if blacklist.entries is empty %}
+Czarna lista jest pusta.
+{% else %}
+Gracze z którymi nie chcemy grać:
+{% for entry in blacklist.entries %}
+{% if entry.reason is empty %}
+- {{ entry.player }}
+{% else %}
+- {{ entry.player }}: {{ entry.reason }}
+{% endif %}
+{% endfor %}
+{% endif %}
