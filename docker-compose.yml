@@ -7,4 +7,4 @@ services:
     stop_signal: SIGINT
     volumes:
       - ./.env:/bot/.env:ro
-      - ./db.sqlite3:/bot/db.sqlite3:rw
+      - ./db/:/bot/db:rw

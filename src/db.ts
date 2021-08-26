@@ -1,8 +1,11 @@
 import fs from 'fs';
+import path from 'path';
 const sqlite3 = require('sqlite3').verbose();
 
-import { DB_LOCATION } from './config';
+import { DB_DIR_LOCATION } from './config';
 import log from './log';
+
+const DB_LOCATION = path.join(DB_DIR_LOCATION, 'db.sqlite3');
 
 const needToInitializeSchema = ((): boolean => {
   try {
