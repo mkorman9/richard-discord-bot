@@ -1,17 +1,15 @@
+import twig from '../templates';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const callback = (props: CommandExecutionProps) => {
-  let msg = 'Commands Available:\n\n';
-  props.commandsList.forEach((manifest) => {
-    msg += `${manifest.description}\n`;
-  });
-
-  props.trigger.channel.send(msg);
+  twig.render('help.twig', {})
+    .then(output => {
+      props.trigger.channel.send(output);
+    });
 };
 
 const help: CommandManifest = {
-  execute: callback,
-  description: '!help - displays this text'
+  execute: callback
 };
 
 export default help;

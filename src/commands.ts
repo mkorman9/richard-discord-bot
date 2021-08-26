@@ -31,8 +31,7 @@ const parseCommand = (str: string): Command => {
     commandsList.get(command).execute({
       command,
       args,
-      trigger,
-      commandsList
+      trigger
     });
   };
 };

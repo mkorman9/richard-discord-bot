@@ -5,6 +5,7 @@ RUN adduser --disabled-password --gecos "" --shell /bin/false --home /bot bot &&
     chown -R bot:bot /bot
 
 ADD src/ /bot/src
+ADD templates/ /bot/templates
 ADD package.json /bot
 ADD yarn.lock /bot
 ADD tsconfig.json /bot
