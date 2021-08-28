@@ -1,18 +1,18 @@
-import { TOKEN, TIMEZONE, LANGUAGE } from './config';
+import { Token, Timezone, Language } from './config';
 import log from './log';
 import './templates';
 import DB from './db';
 import bot from './bot';
 import './events';
 
-if (!TOKEN) {
-  log.error('missing TOKEN! Did you forgot to create .env?');
+if (!Token) {
+  log.error('missing TOKEN! Did you forgot to create config.yml?');
   process.exit(1);
 }
 
-log.info(`bot starting (timezone=${TIMEZONE}, language=${LANGUAGE})...`);
+log.info(`bot starting (timezone=${Timezone}, language=${Language})...`);
 
-bot.login(TOKEN)
+bot.login(Token)
   .catch(err => {
     log.error(`error while logging in: ${err}`);
     process.exit(1);

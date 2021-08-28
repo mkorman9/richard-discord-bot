@@ -1,10 +1,23 @@
-import dotenv from 'dotenv';
+import fs from 'fs';
+import YAML from 'yaml';
 
-dotenv.config();
+const ConfigLocation = './config.yml';
 
-export const TOKEN = process.env.TOKEN;
+const readConfig = () => {
+  try {
+    const configContent = fs.readFileSync(ConfigLocation, 'utf8');
+    return YAML.parse(configContent);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};
 
-export const DB_DIR_LOCATION = process.env.DB_DIR_LOCATION || './.db';
+const config = readConfig();
 
-export const TIMEZONE = process.env.TIMEZONE || 'UTC';
-export const LANGUAGE = process.env.LANGUAGE || 'pl';
+export const Token = config['token'];
+export const Timezone = config['timezone'] || 'UTC';
+export const Language = config['language'] || 'pl';
+
+const databaseConfig = config['database'] || {};
+export const DatabaseDirectory = databaseConfig['directory'] || './.db';

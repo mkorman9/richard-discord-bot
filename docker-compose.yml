@@ -7,5 +7,5 @@ services:
     stop_signal: SIGINT
     user: "${DOCKER_UID}:${DOCKER_GID}"
     volumes:
-      - ./.env:/bot/.env:ro
+      - ./config.yml:/bot/config.yml:ro
       - ./.db/:/bot/.db:rw

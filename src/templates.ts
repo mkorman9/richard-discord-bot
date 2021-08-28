@@ -1,8 +1,8 @@
 import { TwingEnvironment, TwingLoaderFilesystem } from 'twing';
 
-import { LANGUAGE } from './config';
+import { Language } from './config';
 
-const loader = new TwingLoaderFilesystem(`./templates/${LANGUAGE}`);
+const loader = new TwingLoaderFilesystem(`./templates/${Language}`);
 const twing = new TwingEnvironment(loader);
 
 export default twing;

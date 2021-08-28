@@ -1,0 +1,6 @@
+token: <OAuth2 Token>
+timezone: Europe/Warsaw
+language: pl
+
+database:
+  directory: ./.db

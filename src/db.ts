@@ -2,21 +2,21 @@ import fs from 'fs';
 import path from 'path';
 const sqlite3 = require('sqlite3').verbose();
 
-import { DB_DIR_LOCATION } from './config';
+import { DatabaseDirectory } from './config';
 import log from './log';
 
-const DB_LOCATION = path.join(DB_DIR_LOCATION, 'db.sqlite3');
+const DatabaseLocation = path.join(DatabaseDirectory, 'db.sqlite3');
 
 const needToInitializeSchema = ((): boolean => {
   try {
-    return !fs.existsSync(DB_LOCATION);
+    return !fs.existsSync(DatabaseLocation);
   } catch (err) {
-    log.error(`error while opening database file (${DB_LOCATION}): ${err}`);
+    log.error(`error while opening database file (${DatabaseLocation}): ${err}`);
   }
 })();
 
 const openDatabase = () => {
-  return new sqlite3.Database(DB_LOCATION, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, err => {
+  return new sqlite3.Database(DatabaseLocation, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, err => {
     if (err) {
       log.error(`error while opening the database: ${err.message}`);
       process.exit(1);

@@ -1,10 +1,10 @@
-https://www.sitepoint.com/discord-bot-node-js/
-
 ## Run
 
-Prepare `.env` file in the same directory as docker-compose.yml file:
+Prepare `config.yml` file in the same directory as docker-compose.yml:
 ```
-TOKEN=<OAuth2 token>
+cp config.yml.template config.yml
+
+# Replace <OAuth2 Token> with a proper value inside config.yml
 ```
 
 Run:
