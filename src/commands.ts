@@ -1,6 +1,7 @@
 import splitargs from 'splitargs2';
 import type { Message } from 'discord.js';
 
+import richard from './commands/richard';
 import affixes from './commands/affixes';
 import blacklist from './commands/blacklist';
 import type { CommandManifest } from './commands/module';
@@ -11,6 +12,9 @@ export type Command =
   | null;
 
 const commandsList = new Map<string, CommandManifest>(Object.entries({
+  'richard': richard,
+  'ryszard': richard,
+
   'affixes': affixes,
   'affixy': affixes,
 
