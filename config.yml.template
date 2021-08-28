@@ -8,3 +8,7 @@ database:
 roles:
   privileged:
     - Admins
+
+channels:
+  monitored:
+    - '000000000000000000'

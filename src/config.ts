@@ -24,3 +24,6 @@ export const DatabaseDirectory = databaseConfig['directory'] || './.db';
 
 const rolesConfig = config['roles'] || {};
 export const PrivilegedRoles = new Set(rolesConfig['privileged'] || []);
+
+const channelsConfig = config['channels'] || {};
+export const MonitoredChannels = new Set(channelsConfig['monitored'] || []);
