@@ -1,8 +1,9 @@
 FROM node:16.7.0
 
-RUN adduser --disabled-password --gecos "" --shell /bin/false --home /bot bot && \
-    rm -rf /bot/* && \
-    chown -R bot:bot /bot
+USER root
+
+RUN mkdir -p /bot
+WORKDIR /bot
 
 ADD src/ /bot/src
 ADD templates/ /bot/templates
@@ -11,9 +12,6 @@ ADD yarn.lock /bot
 ADD tsconfig.json /bot
 ADD tslint.json /bot
 ADD LICENSE.txt /bot
-
-WORKDIR /bot
-USER bot
 
 RUN yarn install && yarn build
 

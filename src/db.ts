@@ -15,12 +15,23 @@ const needToInitializeSchema = ((): boolean => {
   }
 })();
 
-const DB = new sqlite3.Database(DB_LOCATION);
+const openDatabase = () => {
+  return new sqlite3.Database(DB_LOCATION, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, err => {
+    if (err) {
+      log.error(`error while opening the database: ${err.message}`);
+      process.exit(1);
+    }
+  });
+};
+
+const DB = openDatabase();
 
 const initializeSchema = () => {
   log.info('initializing database schema');
 
-  DB.run('CREATE TABLE blacklist (player TEXT UNIQUE, reason TEXT)');
+  DB.serialize(() => {
+    DB.run('CREATE TABLE blacklist (player TEXT UNIQUE, reason TEXT)');
+  });
 };
 
 DB.serialize(() => {

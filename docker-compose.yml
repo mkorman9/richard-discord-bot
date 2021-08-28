@@ -5,6 +5,7 @@ services:
     build: .
     restart: always
     stop_signal: SIGINT
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     volumes:
       - ./.env:/bot/.env:ro
       - ./.db/:/bot/.db:rw
