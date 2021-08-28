@@ -16,7 +16,7 @@ export const enableSchedulers = (announcementsChannel: TextBasedChannels) => {
 
     scheduleJob(rule, () => {
       const props: SchedulerExecutionProps = {
-        channel: announcementsChannel
+        announcementsChannel
       };
 
       scheduler.execute(props);

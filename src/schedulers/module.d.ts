@@ -11,7 +11,7 @@ export interface SchedulerRule {
 }
 
 export interface SchedulerExecutionProps {
-  channel: TextBasedChannels;
+  announcementsChannel: TextBasedChannels;
 }
 
 export interface SchedulerManifest {

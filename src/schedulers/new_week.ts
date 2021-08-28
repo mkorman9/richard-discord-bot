@@ -21,7 +21,7 @@ const callback = (props: SchedulerExecutionProps) => {
     weekEnd
   })
     .then(output => {
-      props.channel.send(output);
+      props.announcementsChannel.send(output);
     });
 };
 
