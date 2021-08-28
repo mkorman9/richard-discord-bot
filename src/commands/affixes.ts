@@ -18,7 +18,7 @@ const callback = (props: CommandExecutionProps) => {
     weekEnd
   })
     .then(output => {
-      props.channel.send(output);
+      props.message.reply(output);
     });
 };
 

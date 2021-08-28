@@ -30,7 +30,7 @@ const callback = (props: CommandExecutionProps) => {
     mythic: { drops: MythicDrops }
   })
   .then(output => {
-    props.channel.send(output);
+    props.message.reply(output);
   });
 };
 

@@ -1,4 +1,4 @@
-import type { TextBasedChannels } from 'discord.js';
+import type { Message } from 'discord.js';
 
 export interface CommandCallerProps {
   id: string;
@@ -11,7 +11,7 @@ export interface CommandExecutionProps {
   command: string;
   args: string[];
   caller: CommandCallerProps;
-  channel: TextBasedChannels;
+  message: Message;
 }
 
 export interface CommandManifest {

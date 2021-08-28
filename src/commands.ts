@@ -46,13 +46,12 @@ const parseCommand = (str: string): Command => {
 
   return (message: Message) => {
     const caller = extractCallerInfo(message);
-    const channel = message.channel;
 
     commandsList.get(command).execute({
       command,
       args,
       caller,
-      channel
+      message
     });
   };
 };

@@ -15,7 +15,7 @@ const displayBlacklist = (props: CommandExecutionProps) => {
       blacklist: { entries: rows }
     })
       .then(output => {
-        props.channel.send(output);
+        props.message.reply(output);
       });
   });
 };
@@ -28,7 +28,7 @@ const addToBlacklist = (props: CommandExecutionProps, playerName: string, reason
           player: playerName
         })
           .then(output => {
-            props.channel.send(output);
+            props.message.reply(output);
           });
         return;
       }
@@ -41,7 +41,7 @@ const addToBlacklist = (props: CommandExecutionProps, playerName: string, reason
       player: playerName
     })
       .then(output => {
-        props.channel.send(output);
+        props.message.reply(output);
       });
   });
 };
@@ -58,14 +58,14 @@ const removeFromBlacklist = (props: CommandExecutionProps, playerName: string) =
         player: playerName
       })
         .then(output => {
-          props.channel.send(output);
+          props.message.reply(output);
         });
     } else {
       twig.render('blacklist_remove_missing.twig', {
         player: playerName
       })
         .then(output => {
-          props.channel.send(output);
+          props.message.reply(output);
         });
     }
   });
@@ -82,7 +82,7 @@ const searchInBlacklist = (props: CommandExecutionProps, playerName: string) => 
       blacklist: { entries: rows }
     })
       .then(output => {
-        props.channel.send(output);
+        props.message.reply(output);
       });
   });
 };
@@ -90,14 +90,14 @@ const searchInBlacklist = (props: CommandExecutionProps, playerName: string) => 
 const showHelp = (props: CommandExecutionProps) => {
   twig.render('blacklist_help.twig', {})
     .then(output => {
-      props.channel.send(output);
+      props.message.reply(output);
     });
 };
 
 const showAccessDenied = (props: CommandExecutionProps) => {
   twig.render('access_denied.twig', {})
     .then(output => {
-      props.channel.send(output);
+      props.message.reply(output);
     });
 };
 
