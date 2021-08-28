@@ -21,3 +21,6 @@ export const Language = config['language'] || 'pl';
 
 const databaseConfig = config['database'] || {};
 export const DatabaseDirectory = databaseConfig['directory'] || './.db';
+
+const rolesConfig = config['roles'] || {};
+export const PrivilegedRoles = new Set(rolesConfig['privileged'] || []);

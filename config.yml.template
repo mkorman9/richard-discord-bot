@@ -4,3 +4,7 @@ language: pl
 
 database:
   directory: ./.db
+
+roles:
+  privileged:
+    - Admins

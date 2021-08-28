@@ -94,6 +94,13 @@ const showHelp = (props: CommandExecutionProps) => {
     });
 };
 
+const showAccessDenied = (props: CommandExecutionProps) => {
+  twig.render('access_denied.twig', {})
+    .then(output => {
+      props.trigger.channel.send(output);
+    });
+};
+
 const callback = (props: CommandExecutionProps) => {
   const cmd = (props.args[0] || '').toLowerCase();
 
@@ -123,6 +130,11 @@ const callback = (props: CommandExecutionProps) => {
       cmd === '+' ||
       cmd === 'dodaj'
     ) {
+      if (!props.caller.isPrivileged) {
+        showAccessDenied(props);
+        return;
+      }
+
       const reason = props.args.splice(2).join(' ');
       addToBlacklist(props, playerName, reason);
     } else if (
@@ -131,6 +143,11 @@ const callback = (props: CommandExecutionProps) => {
       cmd === 'usuń' ||
       cmd === 'usun'
     ) {
+      if (!props.caller.isPrivileged) {
+        showAccessDenied(props);
+        return;
+      }
+
       removeFromBlacklist(props, playerName);
     } else if (
       cmd === 'search' ||
