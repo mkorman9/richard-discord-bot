@@ -10,5 +10,6 @@ roles:
     - Admins
 
 channels:
+  announcements: '000000000000000000'
   monitored:
     - '000000000000000000'

@@ -44,33 +44,34 @@ const parseCommand = (str: string): Command => {
     return null;
   }
 
-  return (trigger: Message) => {
-    const caller = extractCallerInfo(trigger);
+  return (message: Message) => {
+    const caller = extractCallerInfo(message);
+    const channel = message.channel;
 
     commandsList.get(command).execute({
       command,
       args,
       caller,
-      trigger
+      channel
     });
   };
 };
 
-export const executeCommand = (str: string, trigger: Message): boolean => {
+export const executeCommand = (str: string, message: Message): boolean => {
   const cmd = parseCommand(str);
   if (cmd) {
-    cmd(trigger);
+    cmd(message);
     return true;
   }
 
   return false;
 };
 
-const extractCallerInfo = (msg: Message): CommandCallerProps => {
+const extractCallerInfo = (message: Message): CommandCallerProps => {
   return {
-    id: msg.author.id,
-    name: `${msg.author.username}#${msg.author.discriminator}`,
-    alias: msg.member.displayName,
-    isPrivileged: msg.member.roles.cache.find(role => PrivilegedRoles.has(role.name)) !== undefined
+    id: message.author.id,
+    name: `${message.author.username}#${message.author.discriminator}`,
+    alias: message.member.displayName,
+    isPrivileged: message.member.roles.cache.find(role => PrivilegedRoles.has(role.name)) !== undefined
   };
 };

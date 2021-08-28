@@ -1,17 +1,20 @@
 import moment from 'moment-timezone';
 
-import type { CommandExecutionProps, CommandManifest } from './module';
+import log from '../log';
 import { getRotationForDate, getRotationForWeekNumber } from '../affixes/rotation';
 import { Timezone } from '../config';
 import twig from '../templates';
+import type { SchedulerExecutionProps, SchedulerManifest } from './module';
 
-const callback = (props: CommandExecutionProps) => {
+const callback = (props: SchedulerExecutionProps) => {
+  log.info('running New Week scheduler');
+
   const now = moment().tz(Timezone);
   const rotationThisWeek = getRotationForDate(now);
   const rotationNextWeek = getRotationForWeekNumber(rotationThisWeek.week.weekNumber + 1);
   const weekEnd = moment.duration(rotationNextWeek.week.weekStart.diff(now));
 
-  twig.render('affixes_default.twig', {
+  twig.render('new_week.twig', {
     now,
     rotationThisWeek,
     rotationNextWeek,
@@ -22,8 +25,13 @@ const callback = (props: CommandExecutionProps) => {
     });
 };
 
-const affixes: CommandManifest = {
-  execute: callback
+const newWeek: SchedulerManifest = {
+  execute: callback,
+  rule: {
+    dayOfWeek: 3,
+    hour: 9,
+    minute: 0
+  }
 };
 
-export default affixes;
+export default newWeek;

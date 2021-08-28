@@ -27,3 +27,4 @@ export const PrivilegedRoles = new Set(rolesConfig['privileged'] || []);
 
 const channelsConfig = config['channels'] || {};
 export const MonitoredChannels = new Set(channelsConfig['monitored'] || []);
+export const AnnouncementsChannel = channelsConfig['announcements'];

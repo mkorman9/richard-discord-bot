@@ -21,7 +21,7 @@ const callback = (props: CommandExecutionProps) => {
     legendary: { costs: LegendaryCosts }
   })
   .then(output => {
-    props.trigger.channel.send(output);
+    props.channel.send(output);
   });
 };
 
