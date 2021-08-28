@@ -24,5 +24,5 @@ Stop:
 
 Purge local database:
 ```
-rm -rf .db
+rm -rf .db/db.sqlite3
 ```

@@ -1,6 +1,7 @@
 import twig from '../templates';
 import DB from '../db';
 import log from '../log';
+import { formatPlayerName } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const displayBlacklist = (props: CommandExecutionProps) => {
@@ -86,24 +87,63 @@ const searchInBlacklist = (props: CommandExecutionProps, playerName: string) => 
   });
 };
 
+const showHelp = (props: CommandExecutionProps) => {
+  twig.render('blacklist_help.twig', {})
+    .then(output => {
+      props.trigger.channel.send(output);
+    });
+};
+
 const callback = (props: CommandExecutionProps) => {
   const cmd = (props.args[0] || '').toLowerCase();
 
   if (!cmd) {
-    displayBlacklist(props);
+    showHelp(props);
   } else {
-    const playerName = (props.args[1] || '')
-      .split(' ')
-      .filter(s => s.length > 0)
-      .map(s => s[0].toUpperCase() + s.slice(1).toLowerCase())
-      .join(' ');
+    if (
+      cmd === 'display' ||
+      cmd === 'show' ||
+      cmd === 'wyświetl' ||
+      cmd === 'wyswietl' ||
+      cmd === 'pokaż' ||
+      cmd === 'pokaz'
+    ) {
+      displayBlacklist(props);
+      return;
+    }
 
-    if (cmd === 'add' || cmd === '+' || cmd === 'dodaj') {
-      addToBlacklist(props, playerName, props.args.splice(2).join(' '));
-    } else if (cmd === 'remove' || cmd === '-' || cmd === 'usuń' || cmd === 'usun') {
+    const playerName = (props.args[1] ? formatPlayerName(props.args[1]) : '');
+    if (!playerName) {
+      showHelp(props);
+      return;
+    }
+
+    if (
+      cmd === 'add' ||
+      cmd === '+' ||
+      cmd === 'dodaj'
+    ) {
+      const reason = props.args.splice(2).join(' ');
+      addToBlacklist(props, playerName, reason);
+    } else if (
+      cmd === 'remove' ||
+      cmd === '-' ||
+      cmd === 'usuń' ||
+      cmd === 'usun'
+    ) {
       removeFromBlacklist(props, playerName);
-    } else if (cmd === 'search' || cmd === 'find' || cmd === 'szukaj' || cmd === 'znajdz' || cmd === 'znajdź') {
+    } else if (
+      cmd === 'search' ||
+      cmd === 'find' ||
+      cmd === 'szukaj' ||
+      cmd === 'znajdz' ||
+      cmd === 'znajdź' ||
+      cmd === 'sprawdź' ||
+      cmd === 'sprawdz'
+    ) {
       searchInBlacklist(props, playerName);
+    } else {
+      showHelp(props);
     }
   }
 };

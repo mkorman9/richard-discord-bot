@@ -1774,6 +1774,11 @@ split@0.3:
   dependencies:
     through "2"
 
+splitargs2@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/splitargs2/-/splitargs2-0.1.3.tgz#a529a77c17fa34ade33a35ce5eed0cce7ac59a10"
+  integrity sha512-7Lt7+Z0YwyhFCbhkXMI3AT5qLcH6rKZgWnmlk0+R4ObjqhTZ3kGB4VMTerMuTmMayJnAuDHYTSomAYtlYq0vbg==
+
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"

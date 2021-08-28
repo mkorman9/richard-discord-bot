@@ -1,0 +1,20 @@
+Pozwala zarządzać czarną listą graczy z którymi nie chcemy grać.
+
+Dostępne komendy:
+- `!czarnolisto <wyświetl | wyswietl | pokaż | pokaz>` - wyświetla zawartość czarnej listy
+- `!czarnolisto <dodaj | +> <nazwa gracza> [powód]` - dodaje gracza do czarnej listy. Powód jest opcjonalny
+- `!czarnolisto <usuń | usun | -> <nazwa gracza>` - usuwa gracza z czarnej listy
+- `!czarnolisto <szukaj | znajdź | znajdz | sprawdź | sprawdz> <fragment nazwy gracza>` - pozwala przeszukać czarną listę pod kątem podanego ciągu znaków
+
+Wielkość znaków w nazwie gracza nie ma znaczenia. Nazwa zostanie sformatowana przed dodaniem.
+
+Uwaga! Jeśli nazwa gracza (np. `Jajara-Burning Legion`) zawiera spacje, należy ją podać w cudzysłowie, np. `!czarnolisto dodaj "Jajara-Burning Legion" Nie robi interruptów`.
+Inne przykłady:
+```
+!czarnolisto pokaż
+!czarnolisto dodaj sillymage
+!czarnolisto dodaj "Weakpumper-Burning Legion" mało DPS
+!czarnolisto + nobrainer Pulluje grupy
+!czarnolisto usuń Sillymage
+!czarnolisto szukaj pumper
+```
