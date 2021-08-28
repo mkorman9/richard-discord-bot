@@ -1,0 +1,8 @@
+Koszty stworzenia i ulepszenia legendarki do poszczególnych item leveli:
+{% for cost in legendary.costs %}
+{% if cost.soulCinder == 0 %}
+- {{ cost.ilvl }}:  {{ cost.soulAsh }} Soul Ash
+{% else %}
+- {{ cost.ilvl }}:  {{ cost.soulAsh }} Soul Ash + {{ cost.soulCinder }} Soul Cinder
+{% endif %}
+{% endfor %}

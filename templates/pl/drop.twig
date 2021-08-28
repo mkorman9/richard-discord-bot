@@ -1,0 +1,8 @@
+Item level itemów wypadających na poszczególnych kluczach:
+{% for drop in mythic.drops %}
+{% if drop.weekly == 0 %}
++{{ drop.plus }}:  {{ drop.ilvl }}
+{% else %}
++{{ drop.plus }}:  {{ drop.ilvl }} + {{ drop.weekly }} ze skrzyni
+{% endif %}
+{% endfor %}
