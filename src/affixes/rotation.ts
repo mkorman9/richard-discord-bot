@@ -15,9 +15,9 @@ const Rotation: AffixDefinition[][] = [
   [Affixes.Fortified, Affixes.Raging, Affixes.Explosive, Affixes.Tormented],
   [Affixes.Tyrannical, Affixes.Bursting, Affixes.Volcanic, Affixes.Tormented],
   [Affixes.Fortified, Affixes.Spiteful, Affixes.Grievous, Affixes.Tormented],
-  [Affixes.Tyrannical, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Inspiring, Affixes.Quaking, Affixes.Tormented],
   [Affixes.Fortified, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
-  [Affixes.Tyrannical, null, null, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
   [Affixes.Fortified, Affixes.Grievous, Affixes.Storming, Affixes.Tormented],
   [Affixes.Tyrannical, Affixes.Raging, Affixes.Volcanic, Affixes.Tormented],
   [Affixes.Fortified, Affixes.Inspiring, Affixes.Grievous, Affixes.Tormented]
