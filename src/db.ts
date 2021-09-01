@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 const sqlite3 = require('sqlite3').verbose();
 
@@ -6,14 +5,6 @@ import { DatabaseDirectory } from './config';
 import log from './log';
 
 const DatabaseLocation = path.join(DatabaseDirectory, 'db.sqlite3');
-
-const needToInitializeSchema = ((): boolean => {
-  try {
-    return !fs.existsSync(DatabaseLocation);
-  } catch (err) {
-    log.error(`error while opening database file (${DatabaseLocation}): ${err}`);
-  }
-})();
 
 const openDatabase = () => {
   return new sqlite3.Database(DatabaseLocation, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, err => {
@@ -29,13 +20,18 @@ const DB = openDatabase();
 const initializeSchema = () => {
   log.info('initializing database schema');
 
-  DB.serialize(() => {
-    DB.run('CREATE TABLE blacklist (player TEXT UNIQUE, reason TEXT)');
+  DB.serialize(function () {
+    DB.run('CREATE TABLE IF NOT EXISTS blacklist (player TEXT UNIQUE, reason TEXT)', [], function (err) {
+      if (err) {
+        log.error(`failed to create table blacklist: ${err}`);
+        return;
+      }
+    });
   });
 };
 
 DB.serialize(() => {
-  DB.get('SELECT 1+1', [], (err) => {
+  DB.get('SELECT 1+1', [], function (err) {
     if (err) {
       log.error(`ping to the database has failed: ${err}`);
       process.exit(1);
@@ -43,9 +39,7 @@ DB.serialize(() => {
 
     log.info('successfully connected to the database');
 
-    if (needToInitializeSchema) {
-      initializeSchema();
-    }
+    initializeSchema();
   });
 });
 

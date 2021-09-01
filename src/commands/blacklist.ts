@@ -5,7 +5,7 @@ import { formatPlayerName } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const displayBlacklist = (props: CommandExecutionProps) => {
-  DB.all('SELECT player, reason FROM blacklist', [], (err, rows) => {
+  DB.all('SELECT player, reason FROM blacklist', [], function (err, rows) {
     if (err) {
       log.error(`failed to retrieve blacklist entries: ${err}`);
       return;
@@ -21,7 +21,7 @@ const displayBlacklist = (props: CommandExecutionProps) => {
 };
 
 const addToBlacklist = (props: CommandExecutionProps, playerName: string, reason: string) => {
-  DB.run('INSERT INTO blacklist(player, reason) VALUES (?, ?)', [playerName, reason], (err) => {
+  DB.run('INSERT INTO blacklist(player, reason) VALUES (?, ?)', [playerName, reason], function (err) {
     if (err) {
       if (err.code === 'SQLITE_CONSTRAINT') {
         twig.render('blacklist_add_duplicate.twig', {
@@ -72,7 +72,7 @@ const removeFromBlacklist = (props: CommandExecutionProps, playerName: string) =
 };
 
 const searchInBlacklist = (props: CommandExecutionProps, playerName: string) => {
-  DB.all('SELECT player, reason FROM blacklist WHERE player LIKE ? COLLATE NOCASE', ['%' + playerName + '%'], (err, rows) => {
+  DB.all('SELECT player, reason FROM blacklist WHERE player LIKE ? COLLATE NOCASE', ['%' + playerName + '%'], function (err, rows) {
     if (err) {
       log.error(`failed to retrieve blacklist entries: ${err}`);
       return;
