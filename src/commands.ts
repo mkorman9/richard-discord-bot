@@ -7,6 +7,7 @@ import affixes from './commands/affixes';
 import blacklist from './commands/blacklist';
 import drop from './commands/drop';
 import legendary from './commands/legendary';
+import playlist from './commands/playlist';
 
 import type { CommandManifest, CommandCallerProps } from './commands/module';
 
@@ -28,7 +29,10 @@ const commandsList = new Map<string, CommandManifest>(Object.entries({
   'drop': drop,
 
   'legendary': legendary,
-  'legendarka': legendary
+  'legendarka': legendary,
+
+  'playlist': playlist,
+  'playlista': playlist
 }));
 
 const parseCommand = (str: string): Command => {

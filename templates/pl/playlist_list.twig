@@ -1,0 +1,12 @@
+{% if playlist.titles is empty %}
+Playlista jest pusta.
+{% else %}
+Playlista:
+{% for title in playlist.titles %}
+{% if loop.first %}
+- {{ title }} <--- Teraz gra
+{% else %}
+- {{ title }}
+{% endif %}
+{% endfor %}
+{% endif %}
