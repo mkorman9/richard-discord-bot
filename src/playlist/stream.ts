@@ -9,8 +9,20 @@ export interface StreamDetails {
   resource: AudioResource;
 }
 
+const AllowedDomains = new Set<string>([
+  'youtube.com',
+  'www.youtube.com',
+  'youtu.be',
+  'www.youtu.be'
+]);
+
 export const fetchStream = async (url: string): Promise<StreamDetails> => {
   try {
+    const parsedUrl = new URL(url);
+    if (!AllowedDomains.has(parsedUrl.hostname.toLowerCase())) {
+      throw new Error(`invalid domain name ${parsedUrl.hostname}`);
+    }
+
     const info = await ytdl.getInfo(url);
     const title = info.videoDetails.title;
     const format = ytdl.chooseFormat(info.formats, {
