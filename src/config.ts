@@ -1,5 +1,6 @@
 import fs from 'fs';
 import YAML from 'yaml';
+import moment from 'moment-timezone';
 
 const ConfigLocation = './config.yml';
 
@@ -16,8 +17,10 @@ const readConfig = () => {
 const config = readConfig();
 
 export const Token = config['token'];
+
 export const Timezone = config['timezone'] || 'UTC';
 export const Language = config['language'] || 'pl';
+moment.tz.setDefault(Timezone);
 
 const databaseConfig = config['database'] || {};
 export const DatabaseDirectory = databaseConfig['directory'] || './.db';
