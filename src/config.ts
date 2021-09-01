@@ -16,7 +16,7 @@ const readConfig = () => {
 
 const config = readConfig();
 
-export const Token = config['token'];
+export const DiscordToken = config['discord_token'];
 
 export const Timezone = config['timezone'] || 'UTC';
 export const Language = config['language'] || 'pl';

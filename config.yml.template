@@ -1,4 +1,4 @@
-token: <OAuth2 Token>
+discord_token: <Discord API Token>
 timezone: Europe/Warsaw
 language: pl
 

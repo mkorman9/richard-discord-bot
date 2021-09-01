@@ -4,7 +4,7 @@ Prepare `config.yml` file in the same directory as docker-compose.yml:
 ```
 cp config.yml.template config.yml
 
-# Replace <OAuth2 Token> with a proper value inside config.yml
+# Replace <Discord API Token> with a proper value of Discord API Token inside config.yml
 ```
 
 Run:
