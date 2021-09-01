@@ -5,6 +5,7 @@ import log from './log';
 import bot from './bot';
 import { executeCommand } from './commands';
 import { enableSchedulers } from './schedulers';
+import { executeResponders } from './responders';
 
 bot.on('ready', () => {
   log.info('bot ready!');
@@ -31,11 +32,17 @@ bot.on('ready', () => {
 });
 
 bot.on('messageCreate', msg => {
+  if (msg.author.bot) {
+    return;
+  }
+
   if (!MonitoredChannels.has(msg.channel.id)) {
     return;
   }
 
   if (msg.content.startsWith('!')) {
     executeCommand(msg.content.substr(1), msg);
+  } else {
+    executeResponders(msg);
   }
 });
