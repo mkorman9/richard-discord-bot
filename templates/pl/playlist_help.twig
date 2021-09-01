@@ -1,1 +1,21 @@
-TODO
+Pozwala zarzadzać playlista odtwarzaną na aktualnie używanym kanale głosowym.
+
+Dostępne komendy:
+`!playlista <pokaż | pokaz>` - wyświetla stan playlisty
+`!playlista <add | dodaj | +> <youtube url>` - dodaje video z YouTube na koniec playlisty
+`!playlista <stop | zatrzymaj>` - zatrzymuje odtwarzanie i zeruje stan playlisty
+`!playlista <pause | pauza>` - zatrzymuje tymczasowo odtwarzanie do czasu jego wznowienia
+`!playlista <resume | wznów | wznow>` - wznawia zapauzowane odtwarzanie
+`!playlista <skip | next | następny | pomiń>` - pomija aktualnie odtwarzane video i przechodzi do odtwarzania następnego z listy
+
+Jedyne wspierane aktualnie źródło audio to YouTube.
+
+Przykłady:
+```
+!playlista dodaj https://www.youtube.com/watch?v=83m261lAlrs
+!playlista dodaj https://www.youtube.com/watch?v=qfPK0ziDrYs
+!playlista pokaż
+!playlista pauza
+!playlista wznów
+!playlista pomiń
+```

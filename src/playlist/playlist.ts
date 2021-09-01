@@ -39,9 +39,9 @@ class Playlist {
     this.list.push(stream);
   }
 
-  titles(): string[] {
+  details(): StreamDetails[] {
     const l = this.currentlyPlaying ? [this.currentlyPlaying] : [];
-    return [...l, ...this.list].map(stream => stream.title);
+    return [...l, ...this.list].map(stream => stream);
   }
 }
 

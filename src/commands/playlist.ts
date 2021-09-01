@@ -81,16 +81,27 @@ const callback = (props: CommandExecutionProps) => {
         channel: voiceChannel
       });
     } else if (
+      cmd === 'skip' ||
+      cmd === 'next' ||
+      cmd === 'pomiń' ||
+      cmd === 'pomin' ||
+      cmd === 'następny' ||
+      cmd === 'nastepny'
+    ) {
+      Playlist.skip({
+        channel: voiceChannel
+      });
+    } else if (
       cmd === 'show' ||
       cmd === 'pokaż' ||
       cmd === 'pokaz'
     ) {
-      const playlistTitles = Playlist.list({
+      const streams = Playlist.list({
         channel: voiceChannel
       });
 
       twig.render('playlist_list.twig', {
-        playlist: { titles: playlistTitles }
+        playlist: { streams }
       })
         .then(output => {
           props.message.reply(output);

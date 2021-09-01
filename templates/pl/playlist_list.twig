@@ -1,12 +1,12 @@
-{% if playlist.titles is empty %}
+{% if playlist.streams is empty %}
 Playlista jest pusta.
 {% else %}
 Playlista:
-{% for title in playlist.titles %}
+{% for stream in playlist.streams %}
 {% if loop.first %}
-- {{ title }} <--- Teraz gra
+- {{ stream.title }} ({{ stream.url }}) <--- Teraz gra
 {% else %}
-- {{ title }}
+- {{ stream.title }} ({{ stream.url }})
 {% endif %}
 {% endfor %}
 {% endif %}

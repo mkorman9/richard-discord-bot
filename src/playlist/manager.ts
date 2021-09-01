@@ -26,18 +26,6 @@ interface PlayProps extends GenericProps {
   url: string;
 }
 
-interface PauseProps extends GenericProps {
-}
-
-interface ResumeProps extends GenericProps {
-}
-
-interface StopProps extends GenericProps {
-}
-
-interface ListProps extends GenericProps {
-}
-
 class PlaylistManager {
   private playbacks = new Map<string, PlaybackContext>();
 
@@ -78,13 +66,12 @@ class PlaylistManager {
           });
         })
         .catch(err => {
-          console.error(err);
           reject(err);
         });
     });
   }
 
-  pause(props: PauseProps) {
+  pause(props: GenericProps) {
     if (!this.playbacks.has(props.channel.id)) {
       return;
     }
@@ -93,7 +80,7 @@ class PlaylistManager {
     player.pause();
   }
 
-  resume(props: ResumeProps) {
+  resume(props: GenericProps) {
     if (!this.playbacks.has(props.channel.id)) {
       return;
     }
@@ -102,7 +89,7 @@ class PlaylistManager {
     player.unpause();
   }
 
-  stop(props: StopProps) {
+  stop(props: GenericProps) {
     if (!this.playbacks.has(props.channel.id)) {
       return;
     }
@@ -115,12 +102,23 @@ class PlaylistManager {
     this.playbacks.delete(props.channel.id);
   }
 
-  list(props: ListProps): string[] {
+  skip(props: GenericProps) {
+    if (!this.playbacks.has(props.channel.id)) {
+      return;
+    }
+
+    const context = this.playbacks.get(props.channel.id);
+
+    context.player.stop();
+    this.playNext(context);
+  }
+
+  list(props: GenericProps): StreamDetails[] {
     if (!this.playbacks.has(props.channel.id)) {
       return [];
     }
 
-    return this.playbacks.get(props.channel.id).playlist.titles();
+    return this.playbacks.get(props.channel.id).playlist.details();
   }
 
   private playNext(context: PlaybackContext) {
