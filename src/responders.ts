@@ -8,8 +8,8 @@ const Responders: ResponderManifest[] = [
 ];
 
 export const executeResponders = (message: Message) => {
-  Responders.forEach(responder => {
-    responder.execute({
+  Responders.find(responder => {
+    return responder.execute({
       message
     });
   });

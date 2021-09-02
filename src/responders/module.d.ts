@@ -5,5 +5,5 @@ export interface ResponderExecutionProps {
 }
 
 export interface ResponderManifest {
-  execute: (props: ResponderExecutionProps) => void;
+  execute: (props: ResponderExecutionProps) => boolean;
 }
