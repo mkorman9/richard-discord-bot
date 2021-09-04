@@ -7,6 +7,12 @@ export default winston.createLogger({
   ],
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.printf(l => `${l.timestamp} | ${l.level} | ${l.message}`)
+    winston.format.printf(info => {
+      if (info.stack) {
+        return `${info.timestamp} | ${info.level} | ${info.message}\n${info.stack}`;
+      }
+
+      return `${info.timestamp} | ${info.level} | ${info.message}`;
+    })
   )
 });

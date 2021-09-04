@@ -9,6 +9,10 @@ export interface StreamDetails {
   resourceAccessor: () => AudioResource;
 }
 
+export interface ResourceMetadata {
+  title: string;
+}
+
 const AllowedDomains = new Set<string>([
   'youtube.com',
   'www.youtube.com',
@@ -45,7 +49,7 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
         {
           metadata: {
             title: title
-          }
+          } as ResourceMetadata
         }
       );
     };
