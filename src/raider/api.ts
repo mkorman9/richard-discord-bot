@@ -1,11 +1,19 @@
 import axios from 'axios';
-import moment, { Moment } from 'moment-timezone';
+import moment, { Moment, Duration } from 'moment-timezone';
 
 import { BattleNetRegion } from '../config';
 import { CharacterName } from '../battlenet/character';
 
 const CurrentSeason = 'season-sl-2';
 const Realm = BattleNetRegion || 'eu';
+
+export interface MythicRunDetails {
+  dungeon: string;
+  level: number;
+  time: Duration;
+  inTime: boolean;
+  affixes: string[];
+}
 
 export interface CharacterInfo {
   id: number;
@@ -32,6 +40,7 @@ export interface CharacterInfo {
   };
   mythicRuns: {
     score: number;
+    thisWeek: MythicRunDetails[];
   };
 
   lastUpdate: Moment | null;
@@ -39,13 +48,12 @@ export interface CharacterInfo {
 
 export const getCharacterInfo = async (character: CharacterName): Promise<CharacterInfo> => {
   try {
-    const response = await axios.get(
-      `https://raider.io/api/characters/${Realm}/${character.realmSlug}/${character.name}?season=${CurrentSeason}`
-    );
+    const details = await fetchCharacterDetails(character);
+    const characterData = details['character'];
+    const mythicRunsData = details['mythicPlusScores'];
+    const metaData = details['meta'];
 
-    const characterData = response.data['characterDetails']['character'];
-    const mythicRunsData = response.data['characterDetails']['mythicPlusScores'];
-    const metaData = response.data['characterDetails']['meta'];
+    const runsThisWeek = await fetchMythicRunsThisWeek(characterData['id']);
 
     return {
       id: characterData['id'],
@@ -71,7 +79,16 @@ export const getCharacterInfo = async (character: CharacterName): Promise<Charac
         soulbind: characterData['covenant']['soulbind']['name']
       },
       mythicRuns: {
-        score: mythicRunsData['all']['score']
+        score: mythicRunsData['all']['score'],
+        thisWeek: runsThisWeek.map(run => {
+          return {
+            dungeon: run['summary']['dungeon']['name'],
+            level: run['summary']['mythic_level'],
+            time: moment.duration(run['summary']['clear_time_ms'], 'ms'),
+            inTime: run['summary']['time_remaining_ms'] >= 0,
+            affixes: run['summary']['weekly_modifiers'].map(a => a['name'])
+          };
+        })
       },
 
       lastUpdate: metaData['lastCrawledAt'] ? moment(metaData['lastCrawledAt']) : null
@@ -79,4 +96,18 @@ export const getCharacterInfo = async (character: CharacterName): Promise<Charac
   } catch (err) {
     throw err;
   }
+};
+
+const fetchCharacterDetails = async (character: CharacterName): Promise<{}> => {
+  const response = await axios.get(
+    `https://raider.io/api/characters/${Realm}/${character.realmSlug}/${character.name}?season=${CurrentSeason}`
+  );
+  return response.data['characterDetails'];
+};
+
+const fetchMythicRunsThisWeek = async (characterId: number): Promise<{}[]> => {
+  const response = await axios.get(
+    `https://raider.io/api/characters/mythic-plus-runs?season=${CurrentSeason}&characterId=${characterId}&role=all&affixes=all&date=this_week`
+  );
+  return response.data['runs'];
 };
