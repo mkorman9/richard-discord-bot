@@ -5,7 +5,7 @@ import { BattleNetRegion } from '../config';
 import { CharacterName } from '../battlenet/character';
 
 const CurrentSeason = 'season-sl-2';
-const Realm = BattleNetRegion || 'eu';
+const Region = BattleNetRegion || 'eu';
 
 export interface MythicRunDetails {
   dungeon: string;
@@ -106,7 +106,7 @@ export const getCharacterInfo = async (character: CharacterName): Promise<Charac
 
 const fetchCharacterDetails = async (character: CharacterName): Promise<{}> => {
   const response = await axios.get(
-    `https://raider.io/api/characters/${Realm}/${character.realmSlug}/${character.name}?season=${CurrentSeason}`
+    `https://raider.io/api/characters/${Region}/${character.realmSlug}/${character.name}?season=${CurrentSeason}`
   );
   return response.data['characterDetails'];
 };
