@@ -6,7 +6,7 @@ import log from '../log';
 export interface StreamDetails {
   url: string;
   title: string;
-  resource: AudioResource;
+  resourceAccessor: () => AudioResource;
 }
 
 const AllowedDomains = new Set<string>([
@@ -29,16 +29,31 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
       filter: 'audioonly'
     });
     const size = parseInt(format.contentLength) / (1024 * 1024);
-    const resource = createAudioResource(ytdl.downloadFromInfo(info, {
-      format
-    }));
 
-    log.info(`fetched stream from url "${url}": title="${title}" format=[${format.audioCodec}, ${format.quality}, ${size.toFixed(2)} MiB]`);
+    log.info(`fetched stream info from url "${url}": title="${title}" format=[${format.audioCodec}, ${format.audioQuality}, ${format.audioBitrate}, ${size.toFixed(2)} MiB]`);
+
+    const resourceAccessor = () => {
+      log.info(`started streaming "${title}"`);
+
+      return createAudioResource(
+        ytdl.downloadFromInfo(
+          info,
+          {
+            format
+          }
+        ),
+        {
+          metadata: {
+            title: title
+          }
+        }
+      );
+    };
 
     return {
       url,
       title,
-      resource
+      resourceAccessor
     };
   } catch (err) {
     log.error(`failed to fetch stream from url "${url}": ${err}`);

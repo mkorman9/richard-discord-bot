@@ -130,7 +130,7 @@ class PlaylistManager {
       return;
     }
 
-    context.player.play(stream.resource);
+    context.player.play(stream.resourceAccessor());
   }
 }
 
