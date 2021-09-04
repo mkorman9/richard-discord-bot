@@ -22,7 +22,7 @@ const callApi = async (endpoint: string, namespace: Namespace = 'static', option
   let config = {
     ...options,
     ...{
-      url: `https://${BattleNetRegion}.api.blizzard.com${endpoint.startsWith('/') ? endpoint : ('/' + endpoint)}/?namespace=${namespace}-${BattleNetRegion}`
+      url: `https://${BattleNetRegion}.api.blizzard.com${endpoint.startsWith('/') ? endpoint : ('/' + endpoint)}?namespace=${namespace}-${BattleNetRegion}`
     }
   };
 
@@ -36,7 +36,7 @@ const callApi = async (endpoint: string, namespace: Namespace = 'static', option
 
 export const getWowTokenPrice = async (): Promise<WowTokenPrice> => {
   try {
-    const response = await callApi('/data/wow/token', 'dynamic');
+    const response = await callApi('/data/wow/token/', 'dynamic');
     return {
       lastUpdated: moment.unix(Math.floor(parseInt(response.data['last_updated_timestamp']) / 1000)),
       price: calculateGoldAmount(parseInt(response.data['price']))
