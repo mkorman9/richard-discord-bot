@@ -31,3 +31,8 @@ export const PrivilegedRoles = new Set(rolesConfig['privileged'] || []);
 const channelsConfig = config['channels'] || {};
 export const MonitoredChannels = new Set(channelsConfig['monitored'] || []);
 export const AnnouncementsChannel = channelsConfig['announcements'];
+
+const battlenetConfig = config['battlenet'] || {};
+export const BattleNetRegion = battlenetConfig['region'];
+export const BattleNetClientId = battlenetConfig['clientId'];
+export const BattleNetClientSecret = battlenetConfig['clientSecret'];

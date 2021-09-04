@@ -13,3 +13,8 @@ channels:
   announcements: '000000000000000000'
   monitored:
     - '000000000000000000'
+
+battlenet:
+  region: eu
+  clientId: <Battle.Net client_id>
+  clientSecret: <Battle.Net client_secret>
