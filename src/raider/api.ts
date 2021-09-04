@@ -46,7 +46,7 @@ export interface CharacterInfo {
   lastUpdate: Moment | null;
 }
 
-export const getCharacterInfo = async (character: CharacterName): Promise<CharacterInfo> => {
+export const getCharacterInfo = async (character: CharacterName): Promise<CharacterInfo | null> => {
   try {
     const details = await fetchCharacterDetails(character);
     const characterData = details['character'];
@@ -94,6 +94,12 @@ export const getCharacterInfo = async (character: CharacterName): Promise<Charac
       lastUpdate: metaData['lastCrawledAt'] ? moment(metaData['lastCrawledAt']) : null
     };
   } catch (err) {
+    if (err.response) {
+      if (err.response.status === 400) {
+        return null;
+      }
+    }
+
     throw err;
   }
 };
