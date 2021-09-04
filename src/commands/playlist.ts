@@ -14,20 +14,20 @@ const showHelp = (props: CommandExecutionProps) => {
 };
 
 const callback = (props: CommandExecutionProps) => {
-  const voiceChannel = props.message.member.voice.channel as (VoiceChannel | null);
-  if (!voiceChannel) {
-    twig.render('playlist_no_channel.twig', {})
-      .then(output => {
-        props.message.reply(output);
-      });
-    return;
-  }
-
   const cmd = (props.args[0] || '').toLowerCase();
 
   if (!cmd) {
     showHelp(props);
   } else {
+    const voiceChannel = props.message.member.voice.channel as (VoiceChannel | null);
+    if (!voiceChannel) {
+      twig.render('playlist_no_channel.twig', {})
+        .then(output => {
+          props.message.reply(output);
+        });
+      return;
+    }
+
     if (
       cmd === 'add' ||
       cmd === 'dodaj' ||
