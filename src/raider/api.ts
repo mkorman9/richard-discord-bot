@@ -1,9 +1,8 @@
 import axios from 'axios';
-import momen, { Moment } from 'moment-timezone';
+import moment, { Moment } from 'moment-timezone';
 
 import { BattleNetRegion } from '../config';
 import { CharacterName } from '../battlenet/character';
-import moment from 'moment-timezone';
 
 const CurrentSeason = 'season-sl-2';
 const Realm = BattleNetRegion || 'eu';
