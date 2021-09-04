@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import moment, { Moment } from 'moment';
+import moment, { Moment } from 'moment-timezone';
 
 import { BattleNetRegion } from '../config';
 import log from '../log';
@@ -38,7 +38,7 @@ export const getWowTokenPrice = async (): Promise<WowTokenPrice> => {
   try {
     const response = await callApi('/data/wow/token', 'dynamic');
     return {
-      lastUpdated: moment.utc(parseInt(response.data['last_updated_timestamp'])),
+      lastUpdated: moment.unix(Math.floor(parseInt(response.data['last_updated_timestamp']) / 1000)),
       price: calculateGoldAmount(parseInt(response.data['price']))
     };
   } catch (err) {

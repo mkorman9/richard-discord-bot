@@ -1,5 +1,5 @@
 import axios from 'axios';
-import moment, { Moment } from 'moment';
+import moment, { Moment } from 'moment-timezone';
 
 import {
   BattleNetRegion,
@@ -37,14 +37,15 @@ class TokenStore {
 
       that.getNewToken()
         .then(tokenResponse => {
-          that.cachedAccessToken = {
+          const token = {
             accessToken: tokenResponse.accessToken,
             expiresAt: moment().add(tokenResponse.expiresIn, 'seconds')
           };
 
-          log.info(`acquired new Battle.net access token, it's valid until ${that.cachedAccessToken.expiresAt.format()}`);
+          log.info(`acquired new Battle.net access token, it's valid until ${token.expiresAt.utc().format()}`);
+          that.cachedAccessToken = token;
 
-          resolve(that.cachedAccessToken.accessToken);
+          resolve(token.accessToken);
         })
         .catch(err => {
           log.error(`failed to acquire Battle.Net access token: ${err}`);
