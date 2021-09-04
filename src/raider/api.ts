@@ -1,6 +1,7 @@
 import axios from 'axios';
 import moment, { Moment, Duration } from 'moment-timezone';
 
+import log from '../log';
 import { BattleNetRegion } from '../config';
 import { CharacterName } from '../battlenet/character';
 
@@ -100,6 +101,7 @@ export const getCharacterInfo = async (character: CharacterName): Promise<Charac
       }
     }
 
+    log.error(`could not fetch character information: ${err}`);
     throw err;
   }
 };

@@ -9,6 +9,7 @@ import drop from './commands/drop';
 import legendary from './commands/legendary';
 import playlist from './commands/playlist';
 import wowtoken from './commands/wowtoken';
+import info from './commands/info';
 
 import type { CommandManifest, CommandCallerProps } from './commands/module';
 
@@ -35,7 +36,9 @@ const commandsList = new Map<string, CommandManifest>(Object.entries({
   'playlist': playlist,
   'playlista': playlist,
 
-  'wowtoken': wowtoken
+  'wowtoken': wowtoken,
+
+  'info': info
 }));
 
 const parseCommand = (str: string): Command => {
