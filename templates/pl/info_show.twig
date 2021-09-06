@@ -1,2 +1,6 @@
-{{ character.name.full }} ({{ character.guild.name }})
+{{ character.name.full }} <{{ character.guild.name }}>
 Level {{ character.level }} {{ character.race }} {{ character.spec }} {{ character.class }}
+Item level: {{ character.itemLevel }}
+
+Mythic+ score: {{ character.mythicRuns.score | number_format(0, '.', ',') }}
+Skończone klucze 15+ w tym tygodniu: {{ character.mythicRuns.thisWeek | filter(r => r.level >= 15) | length }}/10
