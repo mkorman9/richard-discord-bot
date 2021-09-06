@@ -4,6 +4,7 @@ import moment, { Moment, Duration } from 'moment-timezone';
 import log from '../log';
 import { BattleNetRegion } from '../config';
 import { CharacterName } from '../battlenet/character';
+import ScanMonitor from './monitor';
 
 const CurrentSeason = 'season-sl-2';
 const Region = BattleNetRegion || 'eu';
@@ -106,6 +107,11 @@ export const getCharacterInfo = async (character: CharacterName): Promise<Charac
   }
 };
 
+export const scheduleScan = async (character: CharacterInfo): Promise<ScanMonitor> => {
+  const batchId = await runCrawlerAndGetBatchId(character);
+  return new ScanMonitor(() => fetchScanStatus(batchId));
+};
+
 const fetchCharacterDetails = async (character: CharacterName): Promise<{}> => {
   const response = await axios.get(
     `https://raider.io/api/characters/${Region}/${character.realmSlug}/${character.name}?season=${CurrentSeason}`
@@ -118,4 +124,24 @@ const fetchMythicRunsThisWeek = async (characterId: number): Promise<{}[]> => {
     `https://raider.io/api/characters/mythic-plus-runs?season=${CurrentSeason}&characterId=${characterId}&role=all&affixes=all&date=this_week`
   );
   return response.data['runs'];
+};
+
+const runCrawlerAndGetBatchId = async (character: CharacterInfo): Promise<string> => {
+  const response = await axios.post(
+    'https://raider.io/api/crawler/characters',
+    {
+      realmId: character.realm.id,
+      realm: character.name.realm,
+      region: Region,
+      character: character.name.name
+    }
+  );
+  return response.data['jobData']['batchId'];
+};
+
+const fetchScanStatus = async (batchId: string): Promise<string> => {
+  const response = await axios.get(
+    `https://raider.io/api/crawler/monitor?batchId=${batchId}`
+  );
+  return response.data['batchInfo']['status'];
 };
