@@ -136,7 +136,9 @@ class PlaylistManager {
       return;
     }
 
-    context.player.play(stream.resourceAccessor());
+    stream.resourceAccessor()
+      .then(audioResource => context.player.play(audioResource))
+      .catch(err => log.error(`error while playing back: ${err}`, { stack: err.stack }));
   }
 }
 

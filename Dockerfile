@@ -2,6 +2,9 @@ FROM node:16.7.0
 
 USER root
 
+RUN rm /usr/bin/python && \
+  ln -s /usr/bin/python3 /usr/bin/python
+
 RUN mkdir -p /bot
 WORKDIR /bot
 

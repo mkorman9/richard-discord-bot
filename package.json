@@ -27,6 +27,7 @@
     "twing": "^5.0.2",
     "winston": "^3.3.3",
     "yaml": "^1.10.2",
+    "youtube-dl-exec": "^1.2.5",
     "ytdl-core": "^4.9.1"
   },
   "devDependencies": {
