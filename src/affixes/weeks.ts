@@ -9,12 +9,10 @@ export interface WeekDefinition {
 const RotationStart = moment.unix(1625036400);
 const CurrentSeasonStart = moment.unix(1625529600);
 const CurrentSeasonStartWeekNumber = Math.floor(moment.duration(CurrentSeasonStart.diff(RotationStart)).asWeeks());
-const WeekStartHour = 8;
 
 export const getWeekForWeekNumber = (weekNumber: number): WeekDefinition => {
   const weekStart = RotationStart.clone()
-    .add(weekNumber, 'weeks')
-    .add(WeekStartHour, 'hours');
+    .add(weekNumber, 'weeks');
   const weekOfSeason = weekNumber - CurrentSeasonStartWeekNumber;
 
   return {
