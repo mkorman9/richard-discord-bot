@@ -1,3 +1,20 @@
+import { CharacterName, parseCharacterName } from '../battlenet/character';
+import { resolveAlias } from '../aliases/aliases';
+
+export const resolveCharacterName = async (name: string): Promise<CharacterName | null> => {
+  const fromAlias = await resolveAlias(name);
+  if (fromAlias) {
+    return fromAlias;
+  }
+
+  const fromName = parseCharacterName(name);
+  if (fromName) {
+    return fromName;
+  }
+
+  return null;
+};
+
 export const formatPlayerName = (playerName: string): string => {
   return playerName
     .split('-')

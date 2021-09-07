@@ -1,6 +1,6 @@
 import twig from '../templates';
 import { getCharacterInfo } from '../raider/api';
-import { parseCharacterName } from '../battlenet/character';
+import { resolveCharacterName } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const showHelp = (props: CommandExecutionProps) => {
@@ -10,37 +10,37 @@ const showHelp = (props: CommandExecutionProps) => {
     });
 };
 
-const callback = (props: CommandExecutionProps) => {
+const callback = async (props: CommandExecutionProps) => {
   const nameRaw = props.args[0];
   if (!nameRaw) {
     showHelp(props);
     return;
   }
 
-  const characterName = parseCharacterName(nameRaw);
-  if (!characterName) {
-    showHelp(props);
-    return;
-  }
+  try {
+    const characterName = await resolveCharacterName(nameRaw);
+    if (!characterName) {
+      showHelp(props);
+      return;
+    }
 
-  getCharacterInfo(characterName)
-    .then(character => {
-      if (!character) {
-        twig.render('info_nocharacter.twig', {})
-          .then(output => {
-            props.message.reply(output);
-          });
-        return;
-      }
-
-      twig.render('info_show.twig', {
-        character
-      })
+    const character = await getCharacterInfo(characterName);
+    if (!character) {
+      twig.render('info_nocharacter.twig', {})
         .then(output => {
           props.message.reply(output);
         });
+      return;
+    }
+
+    twig.render('info_show.twig', {
+      character
     })
-    .catch(err => {});
+      .then(output => {
+        props.message.reply(output);
+      });
+  } catch (err) {
+  }
 };
 
 const info: CommandManifest = {

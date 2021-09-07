@@ -1,7 +1,7 @@
 import log from '../log';
 import twig from '../templates';
 import { getCharacterInfo, scheduleScan } from '../raider/api';
-import { parseCharacterName } from '../battlenet/character';
+import { resolveCharacterName } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const showHelp = (props: CommandExecutionProps) => {
@@ -18,69 +18,49 @@ const showError = (props: CommandExecutionProps) => {
     });
 };
 
-const callback = (props: CommandExecutionProps) => {
+const callback = async (props: CommandExecutionProps) => {
   const nameRaw = props.args[0];
   if (!nameRaw) {
     showHelp(props);
     return;
   }
 
-  const characterName = parseCharacterName(nameRaw);
-  if (!characterName) {
-    showHelp(props);
+  try {
+    const characterName = await resolveCharacterName(nameRaw);
+    if (!characterName) {
+      showHelp(props);
+      return;
+    }
+
+    const character = await getCharacterInfo(characterName);
+    if (!character) {
+      twig.render('scan_nocharacter.twig', {})
+        .then(output => {
+          props.message.reply(output);
+        });
+      return;
+    }
+
+    const scanMonitor = await scheduleScan(character);
+    twig.render('scan_scheduled.twig', {})
+      .then(output => {
+        props.message.reply(output);
+      });
+
+    await scanMonitor.waitForEnd();
+
+    const updatedCharacter = await getCharacterInfo(characterName);
+    twig.render('scan_finished.twig', {
+      character: updatedCharacter
+    })
+      .then(output => {
+        props.message.reply(output);
+      });
+  } catch (err) {
+    log.error(`error while performing scan: ${err}`, { stack: err.stack });
+    showError(props);
     return;
   }
-
-  getCharacterInfo(characterName)
-    .then(async character => {
-      if (!character) {
-        twig.render('scan_nocharacter.twig', {})
-          .then(output => {
-            props.message.reply(output);
-          });
-        return;
-      }
-
-      try {
-        const scanMonitor = await scheduleScan(character);
-
-        twig.render('scan_scheduled.twig', {})
-          .then(output => {
-            props.message.reply(output);
-          });
-
-        scanMonitor.start(
-          async () => {
-            try {
-              const updatedCharacter = await getCharacterInfo(characterName);
-
-              twig.render('scan_finished.twig', {
-                character: updatedCharacter
-              })
-                .then(output => {
-                  props.message.reply(output);
-                });
-            } catch (err) {
-              log.error(`error while fetching updated character info: ${err}`, { stack: err.stack });
-              showError(props);
-              return;
-            }
-          },
-          (err) => {
-            log.error(`error while waiting for scan results: ${err}`, { stack: err.stack });
-            showError(props);
-            return;
-          }
-        );
-      } catch (err) {
-        log.error(`error while scheduling scan: ${err}`, { stack: err.stack });
-        showError(props);
-      }
-    })
-    .catch(err => {
-      log.error(`error while retrieving realm id: ${err}`, { stack: err.stack });
-      showError(props);
-    });
 };
 
 const scan: CommandManifest = {

@@ -7,25 +7,33 @@ class ScanMonitor {
     this.fetchStatus = fetchStatus;
   }
 
-  start(onSuccess: () => Promise<void>, onError: (err) => void) {
+  waitForEnd(): Promise<void> {
     const that = this;
 
-    setTimeout(() => {
-      that.fetchStatus()
-        .then(status => {
-          if (status === 'complete') {
-            onSuccess()
-              .then(() => {})
-              .catch(() => {});
-          } else if (status === 'waiting') {
-            that.start(onSuccess, onError);
-          } else {
-            onError(new Error(`unknown scan status: ${status}`));
-          }
-        })
-        .catch(err => {
-          onError(err);
-        });
+    return new Promise((resolve, reject) => {
+      that.scheduleStatusCheck(resolve, reject);
+    });
+  }
+
+  private scheduleStatusCheck(resolve: () => void, reject: (err) => void) {
+    const that = this;
+
+    setTimeout(async () => {
+      try {
+        const status = await that.fetchStatus();
+
+        if (status === 'complete') {
+          resolve();
+        } else if (status === 'waiting') {
+          that.scheduleStatusCheck(resolve, reject);
+        } else if (status === 'failed') {
+          reject(new Error('scan failed'));
+        } else {
+          reject(new Error(`unknown scan status: ${status}`));
+        }
+      } catch (err) {
+        reject(err);
+      }
     }, MonitorTimeout);
   }
 }
