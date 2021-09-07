@@ -19,7 +19,7 @@ const displayBlacklist = (props: CommandExecutionProps) => {
 const addToBlacklist = (props: CommandExecutionProps, playerName: string, reason: string) => {
   DB.run('INSERT INTO blacklist(player, reason) VALUES (?, ?)', [playerName, reason], function (err) {
     if (err) {
-      if (err.code === 'SQLITE_CONSTRAINT') {
+      if (err.message === 'SQLITE_CONSTRAINT: UNIQUE constraint failed: blacklist.player') {
         sendReply(props.message, 'blacklist/add_duplicate.twig', {
           player: playerName
         });
