@@ -1,4 +1,4 @@
-import twig from '../templates';
+import { sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 interface LegendaryCostDefinition {
@@ -17,11 +17,8 @@ const LegendaryCosts: LegendaryCostDefinition[] = [
 ];
 
 const callback = (props: CommandExecutionProps) => {
-  twig.render('legendary.twig', {
+  sendReply(props.message, 'legendary/cost.twig', {
     legendary: { costs: LegendaryCosts }
-  })
-  .then(output => {
-    props.message.reply(output);
   });
 };
 

@@ -1,21 +1,14 @@
 import log from '../log';
-import twig from '../templates';
 import { getCharacterInfo, scheduleScan } from '../raider/api';
-import { resolveCharacterName } from './utils';
+import { resolveCharacterName, sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const showHelp = (props: CommandExecutionProps) => {
-  twig.render('scan_help.twig', {})
-    .then(output => {
-      props.message.reply(output);
-    });
+  sendReply(props.message, 'scan/help.twig');
 };
 
 const showError = (props: CommandExecutionProps) => {
-  twig.render('scan_error.twig', {})
-    .then(output => {
-      props.message.reply(output);
-    });
+  sendReply(props.message, 'scan/error.twig');
 };
 
 const callback = async (props: CommandExecutionProps) => {
@@ -34,28 +27,19 @@ const callback = async (props: CommandExecutionProps) => {
 
     const character = await getCharacterInfo(characterName);
     if (!character) {
-      twig.render('scan_nocharacter.twig', {})
-        .then(output => {
-          props.message.reply(output);
-        });
+      sendReply(props.message, 'scan/no_character.twig');
       return;
     }
 
     const scanMonitor = await scheduleScan(character);
-    twig.render('scan_scheduled.twig', {})
-      .then(output => {
-        props.message.reply(output);
-      });
+    sendReply(props.message, 'scan/scheduled.twig');
 
     await scanMonitor.waitForEnd();
 
     const updatedCharacter = await getCharacterInfo(characterName);
-    twig.render('scan_finished.twig', {
+    sendReply(props.message, 'scan/finished.twig', {
       character: updatedCharacter
-    })
-      .then(output => {
-        props.message.reply(output);
-      });
+    });
   } catch (err) {
     log.error(`error while performing scan: ${err}`, { stack: err.stack });
     showError(props);

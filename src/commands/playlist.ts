@@ -1,16 +1,13 @@
 import type { VoiceChannel } from 'discord.js';
 
 import PlaylistManager, { PlaybackAlreadyInUseError } from '../playlist/manager';
-import twig from '../templates';
+import { sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const Playlist = new PlaylistManager();
 
 const showHelp = (props: CommandExecutionProps) => {
-  twig.render('playlist_help.twig', {})
-    .then(output => {
-      props.message.reply(output);
-    });
+  sendReply(props.message, 'playlist/help.twig');
 };
 
 const callback = async (props: CommandExecutionProps) => {
@@ -21,10 +18,7 @@ const callback = async (props: CommandExecutionProps) => {
   } else {
     const voiceChannel = props.message.member.voice.channel as (VoiceChannel | null);
     if (!voiceChannel) {
-      twig.render('playlist_no_channel.twig', {})
-        .then(output => {
-          props.message.reply(output);
-        });
+      sendReply(props.message, 'playlist/no_channel.twig');
       return;
     }
 
@@ -46,25 +40,16 @@ const callback = async (props: CommandExecutionProps) => {
           url
         });
 
-        twig.render('playlist_added.twig', {
+        sendReply(props.message, 'playlist/added.twig', {
           title: streamDetails.title
-        })
-          .then(output => {
-            props.message.reply(output);
-          });
+        });
       } catch (err) {
         if (err instanceof PlaybackAlreadyInUseError) {
-          twig.render('playlist_alreadyinuse.twig', {})
-            .then(output => {
-              props.message.reply(output);
-            });
+          sendReply(props.message, 'playlist/alreadyinuse.twig');
           return;
         }
 
-        twig.render('playlist_error.twig', {})
-          .then(output => {
-            props.message.reply(output);
-          });
+        sendReply(props.message, 'playlist/error.twig');
       }
     } else if (
       cmd === 'stop' ||
@@ -108,12 +93,9 @@ const callback = async (props: CommandExecutionProps) => {
         channel: voiceChannel
       });
 
-      twig.render('playlist_list.twig', {
+      sendReply(props.message, 'playlist/list.twig', {
         playlist: { streams }
-      })
-        .then(output => {
-          props.message.reply(output);
-        });
+      });
     } else {
       showHelp(props);
     }

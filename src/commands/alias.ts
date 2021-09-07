@@ -1,20 +1,14 @@
-import twig from '../templates';
 import { parseCharacterName } from '../battlenet/character';
 import { listAliases, defineAlias } from '../aliases/aliases';
+import { sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const showHelp = (props: CommandExecutionProps) => {
-  twig.render('alias_help.twig', {})
-    .then(output => {
-      props.message.reply(output);
-    });
+  sendReply(props.message, 'alias/help.twig');
 };
 
 const showAccessDenied = (props: CommandExecutionProps) => {
-  twig.render('access_denied.twig', {})
-    .then(output => {
-      props.message.reply(output);
-    });
+  sendReply(props.message, 'access_denied.twig');
 };
 
 const callback = (props: CommandExecutionProps) => {
@@ -33,10 +27,7 @@ const callback = (props: CommandExecutionProps) => {
     ) {
       listAliases()
         .then(aliases => {
-          twig.render('alias_show.twig', { aliases })
-            .then(output => {
-              props.message.reply(output);
-            });
+          sendReply(props.message, 'alias/show.twig', { aliases });
         })
         .catch(err => {});
       return;
@@ -63,10 +54,7 @@ const callback = (props: CommandExecutionProps) => {
 
       defineAlias(alias, characterName)
         .then(() => {
-          twig.render('alias_added.twig', {})
-            .then(output => {
-              props.message.reply(output);
-            });
+          sendReply(props.message, 'alias/added.twig');
         })
         .catch(err => {});
     } else {

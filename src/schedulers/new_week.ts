@@ -13,7 +13,7 @@ const callback = (props: SchedulerExecutionProps) => {
   const rotationNextWeek = getRotationForWeekNumber(rotationThisWeek.week.weekNumber + 1);
   const weekEnd = moment.duration(rotationNextWeek.week.weekStart.diff(now));
 
-  twig.render('new_week.twig', {
+  twig.render('new_week/message.twig', {
     now,
     rotationThisWeek,
     rotationNextWeek,

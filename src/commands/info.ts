@@ -1,13 +1,9 @@
-import twig from '../templates';
 import { getCharacterInfo } from '../raider/api';
-import { resolveCharacterName } from './utils';
+import { resolveCharacterName, sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const showHelp = (props: CommandExecutionProps) => {
-  twig.render('info_help.twig', {})
-    .then(output => {
-      props.message.reply(output);
-    });
+  sendReply(props.message, 'info/help.twig');
 };
 
 const callback = async (props: CommandExecutionProps) => {
@@ -26,19 +22,13 @@ const callback = async (props: CommandExecutionProps) => {
 
     const character = await getCharacterInfo(characterName);
     if (!character) {
-      twig.render('info_nocharacter.twig', {})
-        .then(output => {
-          props.message.reply(output);
-        });
+      sendReply(props.message, 'info/no_character.twig');
       return;
     }
 
-    twig.render('info_show.twig', {
+    sendReply(props.message, 'info/show.twig', {
       character
-    })
-      .then(output => {
-        props.message.reply(output);
-      });
+    });
   } catch (err) {
   }
 };

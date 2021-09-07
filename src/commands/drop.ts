@@ -1,4 +1,4 @@
-import twig from '../templates';
+import { sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 interface MythicDropDefinition {
@@ -26,11 +26,8 @@ const MythicDrops: MythicDropDefinition[] = [
 ];
 
 const callback = (props: CommandExecutionProps) => {
-  twig.render('drop.twig', {
+  sendReply(props.message, 'drop/show.twig', {
     mythic: { drops: MythicDrops }
-  })
-  .then(output => {
-    props.message.reply(output);
   });
 };
 

@@ -1,18 +1,15 @@
-import twig from '../templates';
+import { sendReply } from './utils';
 import { getWowTokenPrice } from '../battlenet/api';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
-const callback = (props: CommandExecutionProps) => {
-  getWowTokenPrice()
-    .then(priceInfo => {
-      twig.render('wowtoken_price.twig', {
-        price: { gold: priceInfo.price.gold, updated: priceInfo.lastUpdated }
-      })
-        .then(output => {
-          props.message.reply(output);
-        });
-    })
-    .catch(err => {});
+const callback = async (props: CommandExecutionProps) => {
+  try {
+    const priceInfo = await getWowTokenPrice();
+    sendReply(props.message, 'wowtoken/price.twig', {
+      price: { gold: priceInfo.price.gold, updated: priceInfo.lastUpdated }
+    });
+  } catch (err) {
+  }
 };
 
 const wowtoken: CommandManifest = {

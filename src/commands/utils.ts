@@ -1,5 +1,13 @@
+import type { Message } from 'discord.js';
+
 import { CharacterName, parseCharacterName } from '../battlenet/character';
 import { resolveAlias } from '../aliases/aliases';
+import twig from '../templates';
+
+export const sendReply = async (message: Message, template: string, context: any = {}): Promise<void> => {
+  const content = await twig.render(template, context);
+  message.reply(content);
+};
 
 export const resolveCharacterName = async (name: string): Promise<CharacterName | null> => {
   const fromAlias = await resolveAlias(name);

@@ -1,7 +1,6 @@
-import twig from '../templates';
 import DB from '../db';
 import log from '../log';
-import { formatPlayerName } from './utils';
+import { formatPlayerName, sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const displayBlacklist = (props: CommandExecutionProps) => {
@@ -11,12 +10,9 @@ const displayBlacklist = (props: CommandExecutionProps) => {
       return;
     }
 
-    twig.render('blacklist_display.twig', {
+    sendReply(props.message, 'blacklist/display.twig', {
       blacklist: { entries: rows }
-    })
-      .then(output => {
-        props.message.reply(output);
-      });
+    });
   });
 };
 
@@ -24,12 +20,9 @@ const addToBlacklist = (props: CommandExecutionProps, playerName: string, reason
   DB.run('INSERT INTO blacklist(player, reason) VALUES (?, ?)', [playerName, reason], function (err) {
     if (err) {
       if (err.code === 'SQLITE_CONSTRAINT') {
-        twig.render('blacklist_add_duplicate.twig', {
+        sendReply(props.message, 'blacklist/add_duplicate.twig', {
           player: playerName
-        })
-          .then(output => {
-            props.message.reply(output);
-          });
+        });
         return;
       }
 
@@ -37,12 +30,9 @@ const addToBlacklist = (props: CommandExecutionProps, playerName: string, reason
       return;
     }
 
-    twig.render('blacklist_add_success.twig', {
+    sendReply(props.message, 'blacklist/add_success.twig', {
       player: playerName
-    })
-      .then(output => {
-        props.message.reply(output);
-      });
+    });
   });
 };
 
@@ -54,19 +44,13 @@ const removeFromBlacklist = (props: CommandExecutionProps, playerName: string) =
     }
 
     if (this.changes > 0) {
-      twig.render('blacklist_remove_success.twig', {
+      sendReply(props.message, 'blacklist/remove_success.twig', {
         player: playerName
-      })
-        .then(output => {
-          props.message.reply(output);
-        });
+      });
     } else {
-      twig.render('blacklist_remove_missing.twig', {
+      sendReply(props.message, 'blacklist/remove_missing.twig', {
         player: playerName
-      })
-        .then(output => {
-          props.message.reply(output);
-        });
+      });
     }
   });
 };
@@ -78,27 +62,18 @@ const searchInBlacklist = (props: CommandExecutionProps, playerName: string) => 
       return;
     }
 
-    twig.render('blacklist_search_results.twig', {
+    sendReply(props.message, 'blacklist/search_results.twig', {
       blacklist: { entries: rows }
-    })
-      .then(output => {
-        props.message.reply(output);
-      });
+    });
   });
 };
 
 const showHelp = (props: CommandExecutionProps) => {
-  twig.render('blacklist_help.twig', {})
-    .then(output => {
-      props.message.reply(output);
-    });
+  sendReply(props.message, 'blacklist/help.twig');
 };
 
 const showAccessDenied = (props: CommandExecutionProps) => {
-  twig.render('access_denied.twig', {})
-    .then(output => {
-      props.message.reply(output);
-    });
+  sendReply(props.message, 'access_denied.twig');
 };
 
 const callback = (props: CommandExecutionProps) => {
