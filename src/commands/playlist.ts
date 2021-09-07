@@ -1,6 +1,6 @@
 import type { VoiceChannel } from 'discord.js';
 
-import PlaylistManager from '../playlist/manager';
+import PlaylistManager, { PlaybackAlreadyInUseError } from '../playlist/manager';
 import twig from '../templates';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
@@ -13,7 +13,7 @@ const showHelp = (props: CommandExecutionProps) => {
     });
 };
 
-const callback = (props: CommandExecutionProps) => {
+const callback = async (props: CommandExecutionProps) => {
   const cmd = (props.args[0] || '').toLowerCase();
 
   if (!cmd) {
@@ -40,24 +40,32 @@ const callback = (props: CommandExecutionProps) => {
         return;
       }
 
-      Playlist.play({
-        channel: voiceChannel,
-        url
-      })
-        .then(details => {
-          twig.render('playlist_added.twig', {
-            title: details.title
-          })
-            .then(output => {
-              props.message.reply(output);
-            });
-        })
-        .catch(err => {
-          twig.render('playlist_error.twig', {})
-            .then(output => {
-              props.message.reply(output);
-            });
+      try {
+        const streamDetails = await Playlist.play({
+          channel: voiceChannel,
+          url
         });
+
+        twig.render('playlist_added.twig', {
+          title: streamDetails.title
+        })
+          .then(output => {
+            props.message.reply(output);
+          });
+      } catch (err) {
+        if (err instanceof PlaybackAlreadyInUseError) {
+          twig.render('playlist_alreadyinuse.twig', {})
+            .then(output => {
+              props.message.reply(output);
+            });
+          return;
+        }
+
+        twig.render('playlist_error.twig', {})
+          .then(output => {
+            props.message.reply(output);
+          });
+      }
     } else if (
       cmd === 'stop' ||
       cmd === 'zatrzymaj'

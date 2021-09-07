@@ -1,9 +1,9 @@
 import {
-  VoiceConnection,
   VoiceConnectionStatus,
   AudioPlayer,
   AudioPlayerStatus,
   joinVoiceChannel,
+  getVoiceConnection,
   createAudioPlayer
 } from '@discordjs/voice';
 import type { VoiceChannel } from 'discord.js';
@@ -14,7 +14,6 @@ import log from '../log';
 
 interface PlaybackContext {
   channel: VoiceChannel;
-  connection: VoiceConnection;
   player: AudioPlayer;
   playlist: Playlist;
 }
@@ -27,104 +26,138 @@ interface PlayProps extends GenericProps {
   url: string;
 }
 
+export class PlaybackAlreadyInUseError extends Error {
+  constructor() {
+    super('playback is already is use on this server');
+  }
+}
+
 class PlaylistManager {
   private playbacks = new Map<string, PlaybackContext>();
 
   play(props: PlayProps): Promise<StreamDetails> {
-    return new Promise((resolve, reject) => {
-      fetchStream(props.url)
-        .then(stream => {
-          resolve(stream);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const stream = await fetchStream(props.url);
 
-          if (this.playbacks.has(props.channel.id)) {
-            this.playbacks.get(props.channel.id).playlist.add(stream);
+        if (this.playbacks.has(props.channel.guild.id)) {
+          const playback = this.playbacks.get(props.channel.guild.id);
+
+          if (props.channel.id !== playback.channel.id) {
+            reject(new PlaybackAlreadyInUseError());
             return;
           }
 
-          const manager = this;
-          const connection = joinVoiceChannel({
-            channelId: props.channel.id,
-            guildId: props.channel.guild.id,
-            adapterCreator: props.channel.guild.voiceAdapterCreator
-          });
-          const player = createAudioPlayer();
-          const playlist = new Playlist([stream]);
-          const context: PlaybackContext = {
-            channel: props.channel,
-            connection,
-            player,
-            playlist
-          };
+          playback.playlist.add(stream);
+          resolve(stream);
+          return;
+        }
 
-          connection.on(VoiceConnectionStatus.Ready, () => {
-            connection.subscribe(player);
-            manager.playbacks.set(props.channel.id, context);
-            manager.playNext(context);
-          });
-
-          player.on('error', err => {
-            const metadata = err.resource.metadata as ResourceMetadata;
-            log.error(`error while playing "${metadata.title}": ${err.name} ${err.message}`, { stack: err.stack });
-          });
-
-          player.on(AudioPlayerStatus.Idle, () => {
-            manager.playNext(context);
-          });
-        })
-        .catch(err => {
-          reject(err);
+        const manager = this;
+        const connection = joinVoiceChannel({
+          channelId: props.channel.id,
+          guildId: props.channel.guild.id,
+          adapterCreator: props.channel.guild.voiceAdapterCreator
         });
+        const player = createAudioPlayer();
+        const playlist = new Playlist([stream]);
+        const context: PlaybackContext = {
+          channel: props.channel,
+          player,
+          playlist
+        };
+
+        manager.playbacks.set(props.channel.guild.id, context);
+
+        connection.on(VoiceConnectionStatus.Disconnected, () => {
+          manager.playbacks.delete(props.channel.guild.id);
+        });
+
+        connection.on(VoiceConnectionStatus.Ready, () => {
+          connection.subscribe(player);
+          manager.playNext(context);
+          resolve(stream);
+        });
+
+        player.on('error', err => {
+          const metadata = err.resource.metadata as ResourceMetadata;
+          log.error(`error while playing "${metadata.title}": ${err.name} ${err.message}`, { stack: err.stack });
+        });
+
+        player.on(AudioPlayerStatus.Idle, () => {
+          manager.playNext(context);
+        });
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 
   pause(props: GenericProps) {
-    if (!this.playbacks.has(props.channel.id)) {
+    if (!this.playbacks.has(props.channel.guild.id)) {
+      return;
+    }
+    if (props.channel.id !== this.playbacks.get(props.channel.guild.id).channel.id) {
       return;
     }
 
-    const player = this.playbacks.get(props.channel.id).player;
+    const { player } = this.playbacks.get(props.channel.guild.id);
+
     player.pause();
   }
 
   resume(props: GenericProps) {
-    if (!this.playbacks.has(props.channel.id)) {
+    if (!this.playbacks.has(props.channel.guild.id)) {
+      return;
+    }
+    if (props.channel.id !== this.playbacks.get(props.channel.guild.id).channel.id) {
       return;
     }
 
-    const player = this.playbacks.get(props.channel.id).player;
+    const { player } = this.playbacks.get(props.channel.guild.id);
+
     player.unpause();
   }
 
   stop(props: GenericProps) {
-    if (!this.playbacks.has(props.channel.id)) {
+    if (!this.playbacks.has(props.channel.guild.id)) {
+      return;
+    }
+    if (props.channel.id !== this.playbacks.get(props.channel.guild.id).channel.id) {
       return;
     }
 
-    const player = this.playbacks.get(props.channel.id).player;
-    const connection = this.playbacks.get(props.channel.id).connection;
+    const { player } = this.playbacks.get(props.channel.guild.id);
+    const connection = getVoiceConnection(props.channel.guild.id);
 
     player.stop();
+    connection.disconnect();
     connection.destroy();
-    this.playbacks.delete(props.channel.id);
   }
 
   skip(props: GenericProps) {
-    if (!this.playbacks.has(props.channel.id)) {
+    if (!this.playbacks.has(props.channel.guild.id)) {
+      return;
+    }
+    if (props.channel.id !== this.playbacks.get(props.channel.guild.id).channel.id) {
       return;
     }
 
-    const context = this.playbacks.get(props.channel.id);
+    const context = this.playbacks.get(props.channel.guild.id);
 
     context.player.stop();
     this.playNext(context);
   }
 
   list(props: GenericProps): StreamDetails[] {
-    if (!this.playbacks.has(props.channel.id)) {
+    if (!this.playbacks.has(props.channel.guild.id)) {
+      return [];
+    }
+    if (props.channel.id !== this.playbacks.get(props.channel.guild.id).channel.id) {
       return [];
     }
 
-    return this.playbacks.get(props.channel.id).playlist.details();
+    return this.playbacks.get(props.channel.guild.id).playlist.details();
   }
 
   private playNext(context: PlaybackContext) {
