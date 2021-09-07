@@ -20,13 +20,13 @@ const Rotation: AffixDefinition[][] = [
   [Affixes.Fortified, Affixes.Spiteful, Affixes.Grievous, Affixes.Tormented],
   [Affixes.Tyrannical, Affixes.Inspiring, Affixes.Quaking, Affixes.Tormented],
   [Affixes.Fortified, Affixes.Sanguine, Affixes.Necrotic, Affixes.Tormented],
-  [Affixes.Tyrannical, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
-  [Affixes.Fortified, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
-  [Affixes.Tyrannical, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
-  [Affixes.Fortified, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
-  [Affixes.Tyrannical, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
-  [Affixes.Fortified, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
-  [Affixes.Tyrannical, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented]
+  [Affixes.Tyrannical, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
+  [Affixes.Fortified, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
+  [Affixes.Fortified, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
+  [Affixes.Fortified, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented]
 ];
 
 const EuDelay = 0;
