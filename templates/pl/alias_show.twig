@@ -1,0 +1,8 @@
+{% if aliases is empty %}
+Nie zdefiniowano żadnych aliasów.
+{% else %}
+Zdefiniowane aliasy:
+{% for alias, character in aliases %}
+{{ alias }}: {{ character.full }}
+{% endfor %}
+{% endif %}

@@ -11,6 +11,7 @@ import playlist from './commands/playlist';
 import wowtoken from './commands/wowtoken';
 import info from './commands/info';
 import scan from './commands/scan';
+import alias from './commands/alias';
 
 import type { CommandManifest, CommandCallerProps } from './commands/module';
 
@@ -42,7 +43,9 @@ const commandsList = new Map<string, CommandManifest>(Object.entries({
   'info': info,
 
   'scan': scan,
-  'skan': scan
+  'skan': scan,
+
+  'alias': alias
 }));
 
 const parseCommand = (str: string): Command => {

@@ -27,6 +27,13 @@ const initializeSchema = () => {
         return;
       }
     });
+
+    DB.run('CREATE TABLE IF NOT EXISTS aliases (alias TEXT UNIQUE, name TEXT, realm TEXT, realm_slug TEXT, full TEXT)', [], function (err) {
+      if (err) {
+        log.error(`failed to create table aliases: ${err}`);
+        return;
+      }
+    });
   });
 };
 
