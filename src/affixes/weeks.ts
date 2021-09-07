@@ -6,7 +6,7 @@ export interface WeekDefinition {
   weekStart: Moment;
 }
 
-const RotationStart = moment.unix(1606863600);
+const RotationStart = moment.unix(1625036400);
 const CurrentSeasonStart = moment.unix(1625529600);
 const CurrentSeasonStartWeekNumber = Math.floor(moment.duration(CurrentSeasonStart.diff(RotationStart)).asWeeks());
 const WeekStartHour = 8;

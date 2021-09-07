@@ -9,6 +9,9 @@ export interface WeekRotationDefinition {
 }
 
 const Rotation: AffixDefinition[][] = [
+  [Affixes.Fortified, Affixes.Bursting, Affixes.Storming, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Raging, Affixes.Volcanic, Affixes.Tormented],
+  [Affixes.Fortified, Affixes.Inspiring, Affixes.Grievous, Affixes.Tormented],
   [Affixes.Tyrannical, Affixes.Spiteful, Affixes.Necrotic, Affixes.Tormented],
   [Affixes.Fortified, Affixes.Bolstering, Affixes.Quaking, Affixes.Tormented],
   [Affixes.Tyrannical, Affixes.Sanguine, Affixes.Storming, Affixes.Tormented],
@@ -16,14 +19,17 @@ const Rotation: AffixDefinition[][] = [
   [Affixes.Tyrannical, Affixes.Bursting, Affixes.Volcanic, Affixes.Tormented],
   [Affixes.Fortified, Affixes.Spiteful, Affixes.Grievous, Affixes.Tormented],
   [Affixes.Tyrannical, Affixes.Inspiring, Affixes.Quaking, Affixes.Tormented],
-  [Affixes.Fortified, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
-  [Affixes.Tyrannical, Affixes.Unknown, Affixes.Unknown, Affixes.Tormented],
-  [Affixes.Fortified, Affixes.Grievous, Affixes.Storming, Affixes.Tormented],
-  [Affixes.Tyrannical, Affixes.Raging, Affixes.Volcanic, Affixes.Tormented],
-  [Affixes.Fortified, Affixes.Inspiring, Affixes.Grievous, Affixes.Tormented]
+  [Affixes.Fortified, Affixes.Sanguine, Affixes.Necrotic, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
+  [Affixes.Fortified, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
+  [Affixes.Fortified, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
+  [Affixes.Fortified, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Unkown, Affixes.Unkown, Affixes.Tormented]
 ];
 
-const EuDelay = 3;
+const EuDelay = 0;
 
 const getAffixesForWeekNumber = (weekNumber: number): AffixDefinition[] => {
   return Rotation[(weekNumber + EuDelay) % Rotation.length];

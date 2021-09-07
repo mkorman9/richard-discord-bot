@@ -87,4 +87,9 @@ const Affixes: { [name: string]: AffixDefinition } = {
   }
 };
 
+export const getAffixById = (id: number): AffixDefinition => {
+  return Object.values(Affixes)
+    .find(a => a.id === id) || Affixes.Unknown;
+};
+
 export default Affixes;
