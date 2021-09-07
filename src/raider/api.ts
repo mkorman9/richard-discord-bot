@@ -30,7 +30,7 @@ export interface CharacterInfo {
   guild: {
     id: number;
     name: string;
-  };
+  } | null;
   realm: {
     id: number;
     locale: string;
@@ -39,7 +39,7 @@ export interface CharacterInfo {
     name: string;
     renown: number;
     soulbind: string;
-  };
+  } | null;
   mythicRuns: {
     score: number;
     thisWeek: MythicRunDetails[];
@@ -67,19 +67,19 @@ export const getCharacterInfo = async (character: CharacterName): Promise<Charac
       spec: characterData['spec']['name'],
       level: characterData['level'],
       itemLevel: characterData['itemLevelEquipped'],
-      guild: {
+      guild: characterData['guild'] ? {
         id: characterData['guild']['id'],
         name: characterData['guild']['name']
-      },
+      } : null,
       realm: {
         id: characterData['realm']['id'],
         locale: characterData['realm']['locale']
       },
-      covenant: {
+      covenant: characterData['covenant'] ? {
         name: characterData['covenant']['name'],
         renown: characterData['covenant']['renownLevel'],
         soulbind: characterData['covenant']['soulbind']['name']
-      },
+      } : null,
       mythicRuns: {
         score: mythicRunsData['all']['score'],
         thisWeek: runsThisWeek.map(run => {

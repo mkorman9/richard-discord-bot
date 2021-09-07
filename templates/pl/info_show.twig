@@ -1,4 +1,4 @@
-{{ character.name.full }} <{{ character.guild.name }}>
+{{ character.name.full }} {{ (character.guild ? "<#{character.guild.name}>" : '') | raw }}
 Level {{ character.level }} {{ character.race }} {{ character.spec }} {{ character.class }}
 Item level: {{ character.itemLevel }}
 
