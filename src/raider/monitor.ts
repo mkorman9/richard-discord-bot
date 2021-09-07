@@ -7,14 +7,16 @@ class ScanMonitor {
     this.fetchStatus = fetchStatus;
   }
 
-  start(onSuccess: () => void, onError: (err) => void) {
+  start(onSuccess: () => Promise<void>, onError: (err) => void) {
     const that = this;
 
     setTimeout(() => {
       that.fetchStatus()
         .then(status => {
           if (status === 'complete') {
-            onSuccess();
+            onSuccess()
+              .then(() => {})
+              .catch(() => {});
           } else if (status === 'waiting') {
             that.start(onSuccess, onError);
           } else {

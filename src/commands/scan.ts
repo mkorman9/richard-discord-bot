@@ -50,13 +50,23 @@ const callback = (props: CommandExecutionProps) => {
           });
 
         scanMonitor.start(
-          () => {
-            twig.render('scan_finished.twig', {})
-              .then(output => {
-                props.message.reply(output);
-              });
+          async () => {
+            try {
+              const updatedCharacter = await getCharacterInfo(characterName);
+
+              twig.render('scan_finished.twig', {
+                character: updatedCharacter
+              })
+                .then(output => {
+                  props.message.reply(output);
+                });
+            } catch (err) {
+              log.error(`error while fetching updated character info: ${err}`, { stack: err.stack });
+              showError(props);
+              return;
+            }
           },
-          err => {
+          (err) => {
             log.error(`error while waiting for scan results: ${err}`, { stack: err.stack });
             showError(props);
             return;
