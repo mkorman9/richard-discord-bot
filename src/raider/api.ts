@@ -20,8 +20,8 @@ const ProfileFields = [
   'mythic_plus_scores_by_season',
   'mythic_plus_ranks',
   'mythic_plus_recent_runs',
-  'mythic_plus_best_runs',
-  'mythic_plus_alternate_runs',
+  'mythic_plus_best_runs:all',
+  'mythic_plus_alternate_runs:all',
   'mythic_plus_highest_level_runs',
   'mythic_plus_weekly_highest_level_runs',
   'mythic_plus_previous_weekly_highest_level_runs'
@@ -78,8 +78,8 @@ export interface CharacterInfo {
     };
     recent: MythicRunDetails[];
     thisWeek: MythicRunDetails[];
-    best: MythicRunDetails[];
-    alternate: MythicRunDetails[];
+    best: Map<string, MythicRunDetails>;
+    alternate: Map<string, MythicRunDetails>;
   };
 
   lastUpdate: Moment | null;
@@ -93,8 +93,14 @@ export const getCharacterInfo = async (characterName: CharacterName): Promise<Ch
     const currentWeek = getWeekForDate(moment());
     const recentRuns = profile['mythic_plus_recent_runs'].map(r => mapMythicRun(r));
     const runsThisWeek = recentRuns.filter(r => r.week.weekNumber === currentWeek.weekNumber);
-    const bestRuns = profile['mythic_plus_highest_level_runs'].map(r => mapMythicRun(r));
-    const alternateRuns = profile['mythic_plus_alternate_runs'].map(r => mapMythicRun(r));
+    const bestRuns = profile['mythic_plus_best_runs'].map(r => mapMythicRun(r)).reduce((m, o) => {
+      m[o.dungeon] = o;
+      return m;
+    }, {});
+    const alternateRuns = profile['mythic_plus_alternate_runs'].map(r => mapMythicRun(r)).reduce((m, o) => {
+      m[o.dungeon] = o;
+      return m;
+    }, {});
 
     return {
       id: details['id'],

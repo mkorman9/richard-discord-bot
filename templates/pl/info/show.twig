@@ -6,5 +6,13 @@ Mythic+ score: {{ character.mythicRuns.score | number_format(0, '.', ',') }}
 Pozycja w rankingu ogólnym (świat/region/realm): {{ character.mythicRuns.rank.overall.world }} / {{ character.mythicRuns.rank.overall.region }} / {{ character.mythicRuns.rank.overall.realm }}
 Pozycja w rankingu dla klasy {{ character.class }} (świat/region/realm): {{ character.mythicRuns.rank.class.world }} / {{ character.mythicRuns.rank.class.region }} / {{ character.mythicRuns.rank.class.realm }}
 Skończone klucze 15+ w tym tygodniu: {{ character.mythicRuns.thisWeek | filter(r => r.level >= 15) | length }}/10
+Najlepsze klucze:
+{% for dungeon, run in character.mythicRuns.best %}
+- {{ dungeon }}:
+  - `{{ run.basicAffix }} +{{ run.level }}{{ run.inTime ? '' : ' (po czasie)' }}`
+{% if character.mythicRuns.alternate[dungeon] %}
+  - `{{ character.mythicRuns.alternate[dungeon].basicAffix }} +{{ character.mythicRuns.alternate[dungeon].level }}{{ character.mythicRuns.alternate[dungeon].inTime ? '' : ' (po czasie)' }}`
+{% endif %}
+{% endfor %}
 
 Ostatni skan: {{ character.lastUpdate.format('YYYY-MM-DD HH:mm Z') }}
