@@ -25,15 +25,13 @@ const callback = async (props: CommandExecutionProps) => {
       return;
     }
 
-    const character = await getCharacterInfo(characterName);
-    if (!character) {
+    const scanMonitor = await scheduleScan(characterName);
+    if (!scanMonitor) {
       sendReply(props.message, 'scan/no_character.twig');
       return;
     }
 
-    const scanMonitor = await scheduleScan(character);
     sendReply(props.message, 'scan/scheduled.twig');
-
     await scanMonitor.waitForEnd();
 
     const updatedCharacter = await getCharacterInfo(characterName);

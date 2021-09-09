@@ -3,4 +3,8 @@ Level {{ character.level }} {{ character.race }} {{ character.spec }} {{ charact
 Item level: {{ character.itemLevel }}
 
 Mythic+ score: {{ character.mythicRuns.score | number_format(0, '.', ',') }}
+Pozycja w rankingu ogólnym (świat/region/realm): {{ character.mythicRuns.rank.overall.world }} / {{ character.mythicRuns.rank.overall.region }} / {{ character.mythicRuns.rank.overall.realm }}
+Pozycja w rankingu dla klasy {{ character.class }} (świat/region/realm): {{ character.mythicRuns.rank.class.world }} / {{ character.mythicRuns.rank.class.region }} / {{ character.mythicRuns.rank.class.realm }}
 Skończone klucze 15+ w tym tygodniu: {{ character.mythicRuns.thisWeek | filter(r => r.level >= 15) | length }}/10
+
+Ostatni skan: {{ character.lastUpdate.format('YYYY-MM-DD HH:mm Z') }}
