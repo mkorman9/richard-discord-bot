@@ -1,5 +1,5 @@
 import log from '../log';
-import { getCharacterInfo, scheduleScan } from '../raider/api';
+import { getCharacterInfo, scheduleScan } from '../raider/raider';
 import { resolveCharacterName, sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 

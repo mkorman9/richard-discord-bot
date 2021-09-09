@@ -1,4 +1,4 @@
-import { getCharacterInfo } from '../raider/api';
+import { getCharacterInfo } from '../raider/raider';
 import { resolveCharacterName, sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
