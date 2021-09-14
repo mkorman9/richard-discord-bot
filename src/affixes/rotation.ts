@@ -20,7 +20,7 @@ const Rotation: AffixDefinition[][] = [
   [Affixes.Fortified, Affixes.Spiteful, Affixes.Grievous, Affixes.Tormented],
   [Affixes.Tyrannical, Affixes.Inspiring, Affixes.Quaking, Affixes.Tormented],
   [Affixes.Fortified, Affixes.Sanguine, Affixes.Necrotic, Affixes.Tormented],
-  [Affixes.Tyrannical, Affixes.Bolstering, Affixes.Explosive, Affixes.Tormented],
+  [Affixes.Tyrannical, Affixes.Bolstering, Affixes.Explosive, Affixes.Tormented]
 ];
 
 const EuDelay = 0;
