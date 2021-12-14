@@ -1,5 +1,5 @@
 import ytdl from 'ytdl-core';
-import { raw as ytdlExec } from 'youtube-dl-exec';
+import { exec as ytdlExec } from 'youtube-dl-exec';
 import { AudioResource, createAudioResource, demuxProbe } from '@discordjs/voice';
 
 import log from '../log';
@@ -44,11 +44,11 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
         const process = ytdlExec(
           url,
           {
-            o: '-',    // redirect output to stdout
-            q: '',     // quiet mode
-            r: '100K', // limit rate 100K
-            f: `bestaudio[ext=${format.container}+acodec=${format.audioCodec}+asr=${format.audioSampleRate}]`,
-            noCallHome: true
+            output: '-',
+            quiet: true,
+            limitRate: '100K',
+            format: `bestaudio[ext=${format.container}+acodec=${format.audioCodec}+asr=${format.audioSampleRate}]`,
+            callHome: false
           },
           {
             stdio: ['ignore', 'pipe', 'ignore']
