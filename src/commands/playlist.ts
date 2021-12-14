@@ -1,6 +1,6 @@
 import type { VoiceChannel } from 'discord.js';
 
-import PlaylistManager, { PlaybackAlreadyInUseError } from '../playlist/manager';
+import PlaylistManager, { PlaybackAlreadyInUseError, VoiceChannelJoiningError } from '../playlist/manager';
 import { sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
@@ -46,6 +46,10 @@ const callback = async (props: CommandExecutionProps) => {
       } catch (err) {
         if (err instanceof PlaybackAlreadyInUseError) {
           sendReply(props.message, 'playlist/alreadyinuse.twig');
+          return;
+        }
+        if (err instanceof VoiceChannelJoiningError) {
+          sendReply(props.message, 'playlist/joiningerror.twig');
           return;
         }
 
