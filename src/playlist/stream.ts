@@ -61,6 +61,7 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
           }
 
           process.stdout.resume();
+          log.error(`failed to obtain audio stream: ${err}`);
           reject(err);
         };
 
