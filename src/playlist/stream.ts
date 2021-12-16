@@ -1,7 +1,6 @@
 import ytdl from 'ytdl-core';
 import { exec as ytdlExec } from 'youtube-dl-exec';
 import { AudioResource, createAudioResource, demuxProbe } from '@discordjs/voice';
-
 import log from '../log';
 
 export interface StreamDetails {
@@ -61,8 +60,12 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
             process.kill();
           }
 
+          if (err['code'] && err['code'] === 'ERR_STREAM_PREMATURE_CLOSE') {
+            return;
+          }
+
           process.stdout.resume();
-          log.error(`failed to obtain audio stream: ${err.name} ${err.message.slice(0, 512)}`);  // slice message to avoid long "Premature close" errors in logs
+          log.error(`failed to obtain audio stream: ${err.name} ${err.message}`);
           reject(err);
         };
 
