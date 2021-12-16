@@ -16,7 +16,6 @@ interface PlaybackContext {
   channel: VoiceChannel;
   player: AudioPlayer;
   playlist: Playlist;
-  hasJoinedChannel: boolean;
 }
 
 interface GenericProps {
@@ -30,12 +29,6 @@ interface PlayProps extends GenericProps {
 export class PlaybackAlreadyInUseError extends Error {
   constructor() {
     super('playback is already is use on this server');
-  }
-}
-
-export class VoiceChannelJoiningError extends Error {
-  constructor() {
-    super('voice channel could not be joined');
   }
 }
 
@@ -71,26 +64,19 @@ class PlaylistManager {
         const context: PlaybackContext = {
           channel: props.channel,
           player,
-          playlist,
-          hasJoinedChannel: false
+          playlist
         };
 
         manager.playbacks.set(props.channel.guild.id, context);
 
         connection.on(VoiceConnectionStatus.Disconnected, () => {
           manager.playbacks.delete(props.channel.guild.id);
-
-          if (!context.hasJoinedChannel) {
-            reject(new VoiceChannelJoiningError());
-          }
         });
 
         connection.on(VoiceConnectionStatus.Ready, () => {
           connection.subscribe(player);
           manager.playNext(context);
           resolve(stream);
-
-          context.hasJoinedChannel = true;
         });
 
         player.on('error', err => {

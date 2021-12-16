@@ -1,13 +1,20 @@
-import type { VoiceChannel } from 'discord.js';
+import type { GuildMember, VoiceChannel } from 'discord.js';
 
-import PlaylistManager, { PlaybackAlreadyInUseError, VoiceChannelJoiningError } from '../playlist/manager';
+import PlaylistManager, { PlaybackAlreadyInUseError } from '../playlist/manager';
 import { sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
+import log from '../log';
 
 const Playlist = new PlaylistManager();
 
 const showHelp = (props: CommandExecutionProps) => {
   sendReply(props.message, 'playlist/help.twig');
+};
+
+const hasPermissionsToJoin = (bot: GuildMember, channel: VoiceChannel): boolean => {
+  return channel
+    .permissionsFor(bot)
+    .has('CONNECT');
 };
 
 const callback = async (props: CommandExecutionProps) => {
@@ -19,6 +26,11 @@ const callback = async (props: CommandExecutionProps) => {
     const voiceChannel = props.message.member.voice.channel as (VoiceChannel | null);
     if (!voiceChannel) {
       sendReply(props.message, 'playlist/no_channel.twig');
+      return;
+    }
+
+    if (!hasPermissionsToJoin(voiceChannel.guild.me, voiceChannel)) {
+      sendReply(props.message, 'playlist/accesserror.twig');
       return;
     }
 
@@ -46,10 +58,6 @@ const callback = async (props: CommandExecutionProps) => {
       } catch (err) {
         if (err instanceof PlaybackAlreadyInUseError) {
           sendReply(props.message, 'playlist/alreadyinuse.twig');
-          return;
-        }
-        if (err instanceof VoiceChannelJoiningError) {
-          sendReply(props.message, 'playlist/joiningerror.twig');
           return;
         }
 
