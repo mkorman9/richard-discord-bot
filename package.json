@@ -11,7 +11,8 @@
     "compile": "tsc -p tsconfig.json",
     "build": "npm-run-all clean lint compile",
     "serve": "TZ=UTC NODE_ENV=development node ./dist",
-    "start": "tsc-watch --onSuccess \"npm-run-all lint serve\""
+    "start": "tsc-watch --onSuccess \"npm-run-all lint serve\"",
+    "exec": "exec node ./dist"
   },
   "dependencies": {
     "@discordjs/voice": "^0.7.5",

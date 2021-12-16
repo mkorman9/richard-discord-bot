@@ -3,7 +3,6 @@ import type { GuildMember, VoiceChannel } from 'discord.js';
 import PlaylistManager, { PlaybackAlreadyInUseError } from '../playlist/manager';
 import { sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
-import log from '../log';
 
 const Playlist = new PlaylistManager();
 
