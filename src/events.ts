@@ -1,4 +1,4 @@
-import type { Channel, TextBasedChannels } from 'discord.js';
+import { Channel, Message, MessageFlags, TextBasedChannels } from 'discord.js';
 
 import { MonitoredChannels, AnnouncementsChannel } from './config';
 import log from './log';
@@ -36,6 +36,22 @@ bot.on('messageCreate', msg => {
     return;
   }
 
+  if (msg.channel.type === 'DM') {
+    handleDirectMessage(msg);
+    return;
+  }
+
+  if (msg.channel.type === 'GUILD_TEXT') {
+    handleGuildMessage(msg);
+    return;
+  }
+});
+
+const handleDirectMessage = (msg: Message) => {
+  // TODO
+};
+
+const handleGuildMessage = (msg: Message) => {
   if (!MonitoredChannels.has(msg.channel.id)) {
     return;
   }
@@ -45,4 +61,4 @@ bot.on('messageCreate', msg => {
   } else {
     executeResponders(msg);
   }
-});
+};
