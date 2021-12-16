@@ -16,7 +16,10 @@
               "<node_internals>/**"
           ],
           "cwd": "${workspaceFolder}",
-          "outputCapture": "std"
+          "outputCapture": "std",
+          "env": {
+            "YOUTUBE_DL_FILENAME": "yt-dlp"
+          }
       }
   ]
 }

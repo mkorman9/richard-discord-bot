@@ -16,6 +16,8 @@ ADD tsconfig.json /bot
 ADD tslint.json /bot
 ADD LICENSE.txt /bot
 
+ENV YOUTUBE_DL_FILENAME yt-dlp
+ENV YOUTUBE_DL_HOST 'https://api.github.com/repos/yt-dlp/yt-dlp/releases?per_page=1'
 RUN yarn install && yarn build
 
 ENV TZ UTC

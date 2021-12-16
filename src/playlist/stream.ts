@@ -47,7 +47,8 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
             output: '-',
             quiet: true,
             limitRate: '100K',
-            format: `bestaudio[ext=${format.container}+acodec=${format.audioCodec}+asr=${format.audioSampleRate}]`,
+            // format: `bestaudio[ext=${format.container}+acodec=${format.audioCodec}+asr=${format.audioSampleRate}]`,
+            format: `bestaudio[asr=${format.audioSampleRate}]`,
             callHome: false
           },
           {
