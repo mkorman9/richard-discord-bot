@@ -54,6 +54,7 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
             stdio: ['ignore', 'pipe', 'ignore']
           }
         );
+        let startedStreaming = false;
 
         const handleError = (err: Error) => {
           if (!process.killed) {
@@ -66,7 +67,10 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
 
           process.stdout.resume();
           log.error(`failed to obtain audio stream: ${err.name} ${err.message}`);
-          reject(err);
+
+          if (!startedStreaming) {
+            reject(err);
+          }
         };
 
         process
@@ -84,6 +88,7 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
                 );
 
                 resolve(audioResource);
+                startedStreaming = true;
               })
               .catch(err => handleError(err));
           })
