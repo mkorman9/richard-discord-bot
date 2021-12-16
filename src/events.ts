@@ -6,7 +6,6 @@ import bot from './bot';
 import { executeCommand } from './commands';
 import { enableSchedulers } from './schedulers';
 import { executeResponders } from './responders';
-import { rejects } from 'assert';
 
 bot.on('ready', async () => {
   log.info('bot ready!');
