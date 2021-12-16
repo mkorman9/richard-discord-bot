@@ -56,13 +56,13 @@ export const fetchStream = async (url: string): Promise<StreamDetails> => {
           }
         );
 
-        const handleError = (err) => {
+        const handleError = (err: Error) => {
           if (!process.killed) {
             process.kill();
           }
 
           process.stdout.resume();
-          log.error(`failed to obtain audio stream: ${err}`);
+          log.error(`failed to obtain audio stream: ${err.name} ${err.message.slice(0, 512)}`);  // slice message to avoid long "Premature close" errors in logs
           reject(err);
         };
 
