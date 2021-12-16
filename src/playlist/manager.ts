@@ -98,8 +98,6 @@ class PlaylistManager {
     }
 
     const context = this.playbacks.get(props.channel.guild.id);
-
-    context.player.stop();
     this.playNext(context);
   }
 
