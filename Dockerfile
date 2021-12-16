@@ -22,4 +22,4 @@ RUN yarn install && yarn build
 ENV TZ UTC
 ENV NODE_ENV production
 
-CMD ["yarn", "run", "exec"]
+CMD ["npm", "run", "exec"]
