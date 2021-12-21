@@ -1,24 +1,20 @@
-import { Client, Message, TextBasedChannels } from 'discord.js';
+import { Client, TextBasedChannels } from 'discord.js';
 import { AnnouncementsChannel, MonitoredChannels } from './config';
 import log from './log';
 import { executeCommand } from './commands';
 import { enableSchedulers, disableSchedulers } from './schedulers';
 import { executeResponders } from './responders';
+import { BotReadyEvent, BotClosingEvent, BotMessageEvent } from './bot.d';
 
 export default class EventsHandler {
-  private client: Client;
   private announcementsChannel: (TextBasedChannels | undefined) = undefined;
 
-  constructor(client: Client) {
-    this.client = client;
-  }
-
-  async onReady() {
+  async onReady(event: BotReadyEvent) {
     log.info('bot ready!');
 
     if (AnnouncementsChannel) {
       try {
-        const announcementsChannel = await this.verifyAnnouncementsChannel();
+        const announcementsChannel = await this.verifyAnnouncementsChannel(event.client);
         this.announcementsChannel = announcementsChannel;
       } catch (err) {
       }
@@ -31,30 +27,30 @@ export default class EventsHandler {
     }
   }
 
-  async onClosing() {
+  async onClosing(event: BotClosingEvent) {
     await disableSchedulers();
   }
 
-  async onGuildMessage(msg: Message) {
-    if (!MonitoredChannels.has(msg.channel.id)) {
+  async onGuildMessage(event: BotMessageEvent) {
+    if (!MonitoredChannels.has(event.message.channel.id)) {
       return;
     }
 
-    if (msg.content.startsWith('!')) {
-      executeCommand(msg.content.slice(1), msg);
+    if (event.message.content.startsWith('!')) {
+      executeCommand(event.message.content.slice(1), event);
     } else {
-      executeResponders(msg);
+      executeResponders(event);
     }
   }
 
-  async onDirectMessage(msg: Message) {
+  async onDirectMessage(event: BotMessageEvent) {
     // TODO
   }
 
-  private async verifyAnnouncementsChannel(): Promise<TextBasedChannels> {
+  private async verifyAnnouncementsChannel(client: Client): Promise<TextBasedChannels> {
     return new Promise(async (resolve, reject) => {
       try {
-        const channel = await this.client.channels.fetch(AnnouncementsChannel);
+        const channel = await client.channels.fetch(AnnouncementsChannel);
         if (!channel.isText) {
           log.info(`announcements channel ${AnnouncementsChannel} is not a text channel`);
           reject();

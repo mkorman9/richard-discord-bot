@@ -3,7 +3,7 @@ import { resolveCharacterName, sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const showHelp = (props: CommandExecutionProps) => {
-  sendReply(props.message, 'info/help.twig');
+  sendReply(props.event.message, 'info/help.twig');
 };
 
 const callback = async (props: CommandExecutionProps) => {
@@ -14,7 +14,7 @@ const callback = async (props: CommandExecutionProps) => {
   }
 
   try {
-    const characterName = await resolveCharacterName(nameRaw);
+    const characterName = await resolveCharacterName(nameRaw, props.event.db);
     if (!characterName) {
       showHelp(props);
       return;
@@ -22,11 +22,11 @@ const callback = async (props: CommandExecutionProps) => {
 
     const character = await getCharacterInfo(characterName);
     if (!character) {
-      sendReply(props.message, 'info/no_character.twig');
+      sendReply(props.event.message, 'info/no_character.twig');
       return;
     }
 
-    sendReply(props.message, 'info/show.twig', {
+    sendReply(props.event.message, 'info/show.twig', {
       character
     });
   } catch (err) {

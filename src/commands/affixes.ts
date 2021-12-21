@@ -10,7 +10,7 @@ const callback = (props: CommandExecutionProps) => {
   const rotationNextWeek = getRotationForWeekNumber(rotationThisWeek.week.weekNumber + 1);
   const weekEnd = moment.duration(rotationNextWeek.week.weekStart.diff(now));
 
-  sendReply(props.message, 'affixes/show.twig', {
+  sendReply(props.event.message, 'affixes/show.twig', {
     now,
     rotationThisWeek,
     rotationNextWeek,

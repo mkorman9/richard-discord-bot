@@ -1,10 +1,10 @@
-import DB from '../db';
 import log from '../log';
 import { CharacterName } from '../battlenet/character';
+import { Database } from 'sqlite3';
 
-export const listAliases = async (): Promise<Map<string, CharacterName>> => {
+export const listAliases = async (db: Database): Promise<Map<string, CharacterName>> => {
   return new Promise((resolve, reject) => {
-    DB.all('SELECT alias, name, realm, realm_slug, full FROM aliases', [], function (err, rows) {
+    db.all('SELECT alias, name, realm, realm_slug, full FROM aliases', [], function (err, rows) {
       if (err) {
         log.error(`failed to retrieve aliases: ${err}`);
         reject(err);
@@ -29,9 +29,9 @@ export const listAliases = async (): Promise<Map<string, CharacterName>> => {
   });
 };
 
-export const resolveAlias = async (alias: string): Promise<CharacterName | null> => {
+export const resolveAlias = async (alias: string, db: Database): Promise<CharacterName | null> => {
   return new Promise((resolve, reject) => {
-    DB.get('SELECT name, realm, realm_slug, full FROM aliases WHERE alias = ?', [alias], function (err, row) {
+    db.get('SELECT name, realm, realm_slug, full FROM aliases WHERE alias = ?', [alias], function (err, row) {
       if (err) {
         log.error(`failed to resolve alias: ${err}`);
         reject(err);
@@ -53,9 +53,9 @@ export const resolveAlias = async (alias: string): Promise<CharacterName | null>
   });
 };
 
-export const defineAlias = async (alias: string, characterName: CharacterName): Promise<void> => {
+export const defineAlias = async (alias: string, characterName: CharacterName, db: Database): Promise<void> => {
   return new Promise((resolve, reject) => {
-    DB.run(
+    db.run(
       'INSERT OR REPLACE INTO aliases(alias, name, realm, realm_slug, full) VALUES (?, ?, ?, ?, ?)',
       [alias, characterName.name, characterName.realm, characterName.realmSlug, characterName.full],
       function (err) {

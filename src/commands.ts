@@ -14,8 +14,9 @@ import scan from './commands/scan';
 import alias from './commands/alias';
 
 import type { CommandManifest, CommandCallerProps } from './commands/module';
+import type { BotMessageEvent } from './bot.d';
 
-export type CommandCallback = (trigger: Message) => void;
+export type CommandCallback = (event: BotMessageEvent) => void;
 export type Command =
   CommandCallback
   | null;
@@ -61,33 +62,33 @@ const parseCommand = (str: string): Command => {
     return null;
   }
 
-  return (message: Message) => {
-    const caller = extractCallerInfo(message);
+  return (event: BotMessageEvent) => {
+    const caller = extractCallerInfo(event);
 
     commandsList.get(command).execute({
       command,
       args,
       caller,
-      message
+      event
     });
   };
 };
 
-export const executeCommand = (str: string, message: Message): boolean => {
-  const cmd = parseCommand(str);
+export const executeCommand = (command: string, event: BotMessageEvent): boolean => {
+  const cmd = parseCommand(command);
   if (cmd) {
-    cmd(message);
+    cmd(event);
     return true;
   }
 
   return false;
 };
 
-const extractCallerInfo = (message: Message): CommandCallerProps => {
+const extractCallerInfo = (event: BotMessageEvent): CommandCallerProps => {
   return {
-    id: message.author.id,
-    name: `${message.author.username}#${message.author.discriminator}`,
-    alias: message.member.displayName,
-    isPrivileged: message.member.roles.cache.find(role => PrivilegedRoles.has(role.name)) !== undefined
+    id: event.message.author.id,
+    name: `${event.message.author.username}#${event.message.author.discriminator}`,
+    alias: event.message.member.displayName,
+    isPrivileged: event.message.member.roles.cache.find(role => PrivilegedRoles.has(role.name)) !== undefined
   };
 };

@@ -3,14 +3,15 @@ import type { Message } from 'discord.js';
 import { CharacterName, parseCharacterName } from '../battlenet/character';
 import { resolveAlias } from '../aliases/aliases';
 import twig from '../templates';
+import { Database } from 'sqlite3';
 
 export const sendReply = async (message: Message, template: string, context: any = {}): Promise<void> => {
   const content = await twig.render(template, context);
   message.reply(content);
 };
 
-export const resolveCharacterName = async (name: string): Promise<CharacterName | null> => {
-  const fromAlias = await resolveAlias(name);
+export const resolveCharacterName = async (name: string, db: Database): Promise<CharacterName | null> => {
+  const fromAlias = await resolveAlias(name, db);
   if (fromAlias) {
     return fromAlias;
   }

@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import type { BotMessageEvent } from '../bot.d';
 
 export interface CommandCallerProps {
   id: string;
@@ -11,7 +11,7 @@ export interface CommandExecutionProps {
   command: string;
   args: string[];
   caller: CommandCallerProps;
-  message: Message;
+  event: BotMessageEvent;
 }
 
 export interface CommandManifest {

@@ -1,26 +1,25 @@
-import DB from '../db';
 import log from '../log';
 import { formatPlayerName, sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const displayBlacklist = (props: CommandExecutionProps) => {
-  DB.all('SELECT player, reason FROM blacklist', [], function (err, rows) {
+  props.event.db.all('SELECT player, reason FROM blacklist', [], function (err, rows) {
     if (err) {
       log.error(`failed to retrieve blacklist entries: ${err}`);
       return;
     }
 
-    sendReply(props.message, 'blacklist/display.twig', {
+    sendReply(props.event.message, 'blacklist/display.twig', {
       blacklist: { entries: rows }
     });
   });
 };
 
 const addToBlacklist = (props: CommandExecutionProps, playerName: string, reason: string) => {
-  DB.run('INSERT INTO blacklist(player, reason) VALUES (?, ?)', [playerName, reason], function (err) {
+  props.event.db.run('INSERT INTO blacklist(player, reason) VALUES (?, ?)', [playerName, reason], function (err) {
     if (err) {
       if (err.message === 'SQLITE_CONSTRAINT: UNIQUE constraint failed: blacklist.player') {
-        sendReply(props.message, 'blacklist/add_duplicate.twig', {
+        sendReply(props.event.message, 'blacklist/add_duplicate.twig', {
           player: playerName
         });
         return;
@@ -30,25 +29,25 @@ const addToBlacklist = (props: CommandExecutionProps, playerName: string, reason
       return;
     }
 
-    sendReply(props.message, 'blacklist/add_success.twig', {
+    sendReply(props.event.message, 'blacklist/add_success.twig', {
       player: playerName
     });
   });
 };
 
 const removeFromBlacklist = (props: CommandExecutionProps, playerName: string) => {
-  DB.run('DELETE FROM blacklist WHERE player = ?', [playerName], function (err) {
+  props.event.db.run('DELETE FROM blacklist WHERE player = ?', [playerName], function (err) {
     if (err) {
       log.error(`failed to delete blacklist entry: ${err}`);
       return;
     }
 
     if (this.changes > 0) {
-      sendReply(props.message, 'blacklist/remove_success.twig', {
+      sendReply(props.event.message, 'blacklist/remove_success.twig', {
         player: playerName
       });
     } else {
-      sendReply(props.message, 'blacklist/remove_missing.twig', {
+      sendReply(props.event.message, 'blacklist/remove_missing.twig', {
         player: playerName
       });
     }
@@ -56,24 +55,24 @@ const removeFromBlacklist = (props: CommandExecutionProps, playerName: string) =
 };
 
 const searchInBlacklist = (props: CommandExecutionProps, playerName: string) => {
-  DB.all('SELECT player, reason FROM blacklist WHERE player LIKE ? COLLATE NOCASE', ['%' + playerName + '%'], function (err, rows) {
+  props.event.db.all('SELECT player, reason FROM blacklist WHERE player LIKE ? COLLATE NOCASE', ['%' + playerName + '%'], function (err, rows) {
     if (err) {
       log.error(`failed to retrieve blacklist entries: ${err}`);
       return;
     }
 
-    sendReply(props.message, 'blacklist/search_results.twig', {
+    sendReply(props.event.message, 'blacklist/search_results.twig', {
       blacklist: { entries: rows }
     });
   });
 };
 
 const showHelp = (props: CommandExecutionProps) => {
-  sendReply(props.message, 'blacklist/help.twig');
+  sendReply(props.event.message, 'blacklist/help.twig');
 };
 
 const showAccessDenied = (props: CommandExecutionProps) => {
-  sendReply(props.message, 'access_denied.twig');
+  sendReply(props.event.message, 'access_denied.twig');
 };
 
 const callback = (props: CommandExecutionProps) => {

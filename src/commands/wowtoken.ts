@@ -5,7 +5,7 @@ import type { CommandExecutionProps, CommandManifest } from './module';
 const callback = async (props: CommandExecutionProps) => {
   try {
     const priceInfo = await getWowTokenPrice();
-    sendReply(props.message, 'wowtoken/price.twig', {
+    sendReply(props.event.message, 'wowtoken/price.twig', {
       price: { gold: priceInfo.price.gold, updated: priceInfo.lastUpdated }
     });
   } catch (err) {

@@ -4,11 +4,11 @@ import { sendReply } from './utils';
 import type { CommandExecutionProps, CommandManifest } from './module';
 
 const showHelp = (props: CommandExecutionProps) => {
-  sendReply(props.message, 'alias/help.twig');
+  sendReply(props.event.message, 'alias/help.twig');
 };
 
 const showAccessDenied = (props: CommandExecutionProps) => {
-  sendReply(props.message, 'access_denied.twig');
+  sendReply(props.event.message, 'access_denied.twig');
 };
 
 const callback = (props: CommandExecutionProps) => {
@@ -25,9 +25,9 @@ const callback = (props: CommandExecutionProps) => {
       cmd === 'pokaż' ||
       cmd === 'pokaz'
     ) {
-      listAliases()
+      listAliases(props.event.db)
         .then(aliases => {
-          sendReply(props.message, 'alias/show.twig', { aliases });
+          sendReply(props.event.message, 'alias/show.twig', { aliases });
         })
         .catch(err => {});
       return;
@@ -52,9 +52,9 @@ const callback = (props: CommandExecutionProps) => {
         return;
       }
 
-      defineAlias(alias, characterName)
+      defineAlias(alias, characterName, props.event.db)
         .then(() => {
-          sendReply(props.message, 'alias/added.twig');
+          sendReply(props.event.message, 'alias/added.twig');
         })
         .catch(err => {});
     } else {

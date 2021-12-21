@@ -7,7 +7,7 @@ import type { CommandExecutionProps, CommandManifest } from './module';
 const Playlist = new PlaylistManager();
 
 const showHelp = (props: CommandExecutionProps) => {
-  sendReply(props.message, 'playlist/help.twig');
+  sendReply(props.event.message, 'playlist/help.twig');
 };
 
 const hasPermissionsToJoin = (bot: GuildMember, channel: VoiceChannel): boolean => {
@@ -22,14 +22,14 @@ const callback = async (props: CommandExecutionProps) => {
   if (!cmd) {
     showHelp(props);
   } else {
-    const voiceChannel = props.message.member.voice.channel as (VoiceChannel | null);
+    const voiceChannel = props.event.message.member.voice.channel as (VoiceChannel | null);
     if (!voiceChannel) {
-      sendReply(props.message, 'playlist/no_channel.twig');
+      sendReply(props.event.message, 'playlist/no_channel.twig');
       return;
     }
 
     if (!hasPermissionsToJoin(voiceChannel.guild.me, voiceChannel)) {
-      sendReply(props.message, 'playlist/accesserror.twig');
+      sendReply(props.event.message, 'playlist/accesserror.twig');
       return;
     }
 
@@ -51,16 +51,16 @@ const callback = async (props: CommandExecutionProps) => {
           url
         });
 
-        sendReply(props.message, 'playlist/added.twig', {
+        sendReply(props.event.message, 'playlist/added.twig', {
           title: streamDetails.title
         });
       } catch (err) {
         if (err instanceof PlaybackAlreadyInUseError) {
-          sendReply(props.message, 'playlist/alreadyinuse.twig');
+          sendReply(props.event.message, 'playlist/alreadyinuse.twig');
           return;
         }
 
-        sendReply(props.message, 'playlist/error.twig');
+        sendReply(props.event.message, 'playlist/error.twig');
       }
     } else if (
       cmd === 'stop' ||
@@ -104,7 +104,7 @@ const callback = async (props: CommandExecutionProps) => {
         channel: voiceChannel
       });
 
-      sendReply(props.message, 'playlist/list.twig', {
+      sendReply(props.event.message, 'playlist/list.twig', {
         playlist: { streams }
       });
     } else {

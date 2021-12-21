@@ -1,9 +1,5 @@
-import type { Message } from 'discord.js';
-
-export interface ResponderExecutionProps {
-  message: Message;
-}
+import type { BotMessageEvent } from '../bot.d';
 
 export interface ResponderManifest {
-  execute: (props: ResponderExecutionProps) => boolean;
+  execute: (event: BotMessageEvent) => boolean;
 }

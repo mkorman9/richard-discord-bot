@@ -26,7 +26,7 @@ const MythicDrops: MythicDropDefinition[] = [
 ];
 
 const callback = (props: CommandExecutionProps) => {
-  sendReply(props.message, 'drop/show.twig', {
+  sendReply(props.event.message, 'drop/show.twig', {
     mythic: { drops: MythicDrops }
   });
 };

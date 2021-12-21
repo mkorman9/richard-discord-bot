@@ -17,7 +17,7 @@ const LegendaryCosts: LegendaryCostDefinition[] = [
 ];
 
 const callback = (props: CommandExecutionProps) => {
-  sendReply(props.message, 'legendary/cost.twig', {
+  sendReply(props.event.message, 'legendary/cost.twig', {
     legendary: { costs: LegendaryCosts }
   });
 };
