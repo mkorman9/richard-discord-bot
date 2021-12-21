@@ -3,7 +3,6 @@ import log from './log';
 import './templates';
 import DB from './db';
 import bot from './bot';
-import './events';
 
 if (!DiscordToken) {
   log.error('missing Discord API Token! Exiting');
