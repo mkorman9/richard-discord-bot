@@ -1,4 +1,4 @@
-import type { TextBasedChannels } from 'discord.js';
+import type { BotContext } from '../bot.d';
 
 export interface SchedulerRule {
   second?: number;
@@ -10,11 +10,7 @@ export interface SchedulerRule {
   dayOfWeek?: number;
 }
 
-export interface SchedulerExecutionProps {
-  announcementsChannel: TextBasedChannels;
-}
-
 export interface SchedulerManifest {
-  execute: (props: SchedulerExecutionProps) => void;
+  execute: (context: BotContext) => void;
   rule: SchedulerRule;
 }

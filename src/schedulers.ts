@@ -1,25 +1,21 @@
 import { scheduleJob, RecurrenceRule, gracefulShutdown } from 'node-schedule';
-import type { TextBasedChannels } from 'discord.js';
 
 import { Timezone } from './config';
 
 import newWeek from './schedulers/new_week';
-import type { SchedulerRule, SchedulerExecutionProps, SchedulerManifest } from './schedulers/module';
+import type { SchedulerRule, SchedulerManifest } from './schedulers/module';
+import type { BotContext } from './bot.d';
 
 const Schedulers: SchedulerManifest[] = [
   newWeek
 ];
 
-export const enableSchedulers = (announcementsChannel: TextBasedChannels) => {
+export const enableSchedulers = (context: BotContext) => {
   Schedulers.forEach(scheduler => {
     const rule = createRule(scheduler.rule);
 
     scheduleJob(rule, () => {
-      const props: SchedulerExecutionProps = {
-        announcementsChannel
-      };
-
-      scheduler.execute(props);
+      scheduler.execute(context);
     });
   });
 };

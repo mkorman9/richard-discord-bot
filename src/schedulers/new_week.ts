@@ -3,9 +3,17 @@ import moment from 'moment-timezone';
 import log from '../log';
 import { getRotationForDate, getRotationForWeekNumber } from '../affixes/rotation';
 import twig from '../templates';
-import type { SchedulerExecutionProps, SchedulerManifest } from './module';
+import { AnnouncementsChannel } from '../config';
+import type { SchedulerManifest } from './module';
+import type { BotContext } from '../bot.d';
+import { TextBasedChannels } from 'discord.js';
 
-const callback = (props: SchedulerExecutionProps) => {
+const callback = (context: BotContext) => {
+  const channel = context.client.channels.cache.get(AnnouncementsChannel) as TextBasedChannels;
+  if (!channel) {
+    return;
+  }
+
   log.info('running New Week scheduler');
 
   const now = moment();
@@ -20,7 +28,7 @@ const callback = (props: SchedulerExecutionProps) => {
     weekEnd
   })
     .then(output => {
-      props.announcementsChannel.send(output);
+      channel.send(output);
     });
 };
 
