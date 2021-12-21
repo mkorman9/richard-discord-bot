@@ -1,40 +1,67 @@
-import { Client, Intents, Message, PartialTypes } from 'discord.js';
+import { DiscordToken, Language, Timezone } from './config';
+import DB from './db';
+import log from './log';
+import { createDiscordClient } from './discord_client';
 import EventsHandler from './events_handler';
+import { Client, Message } from 'discord.js';
 
-const intents = [
-  Intents.FLAGS.GUILDS,
-  Intents.FLAGS.GUILD_MESSAGES,
-  Intents.FLAGS.GUILD_VOICE_STATES,
-  Intents.FLAGS.DIRECT_MESSAGES
-];
-const partials: PartialTypes[] = [
-  'CHANNEL'
-];
+class Bot {
+  private client: Client;
+  private eventsHandler: EventsHandler;
 
-const bot = new Client({
-  intents,
-  partials
-});
-const eventsHandler = new EventsHandler(bot);
+  init(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      if (!DiscordToken) {
+        log.error('missing Discord API Token! Exiting');
+        reject(new Error('missing Discord token'));
+      }
 
-bot.on('ready', async () => {
-  eventsHandler.onReady();
-});
+      log.info(`bot starting (timezone=${Timezone}, language=${Language})...`);
 
-bot.on('messageCreate', async (msg: Message) => {
-  if (msg.author.bot) {
-    return;
+      this.client = createDiscordClient();
+      this.eventsHandler = new EventsHandler(this.client);
+      this.registerEventsHandlerActions();
+
+      try {
+        await this.client.login(DiscordToken);
+      } catch (err) {
+        log.error(`error while logging in to Discord API: ${err}`);
+        reject(new Error('Discord login error'));
+        return;
+      }
+
+      resolve();
+    });
   }
 
-  if (msg.channel.type === 'DM') {
-    eventsHandler.onDirectMessage(msg);
-    return;
+  destroy() {
+    log.info('bot closing...');
+
+    DB.close();
+    this.client.destroy();
   }
 
-  if (msg.channel.type === 'GUILD_TEXT') {
-    eventsHandler.onGuildMessage(msg);
-    return;
-  }
-});
+  private registerEventsHandlerActions() {
+    this.client.on('ready', async () => {
+      this.eventsHandler.onReady();
+    });
 
-export default bot;
+    this.client.on('messageCreate', async (msg: Message) => {
+      if (msg.author.bot) {
+        return;
+      }
+
+      if (msg.channel.type === 'DM') {
+        this.eventsHandler.onDirectMessage(msg);
+        return;
+      }
+
+      if (msg.channel.type === 'GUILD_TEXT') {
+        this.eventsHandler.onGuildMessage(msg);
+        return;
+      }
+    });
+  }
+}
+
+export default new Bot();

@@ -1,26 +1,11 @@
-import { DiscordToken, Timezone, Language } from './config';
 import log from './log';
 import './templates';
-import DB from './db';
 import bot from './bot';
 
-if (!DiscordToken) {
-  log.error('missing Discord API Token! Exiting');
-  process.exit(1);
-}
-
-log.info(`bot starting (timezone=${Timezone}, language=${Language})...`);
-
-bot.login(DiscordToken)
-  .catch(err => {
-    log.error(`error while logging in: ${err}`);
-    process.exit(1);
-  });
-
 process.on('SIGINT', () => {
-  log.info('bot is shutting down due to a signal');
+  log.info('received a SIGINT signal');
 
-  DB.close();
+  bot.destroy();
   process.exit(0);
 });
 
@@ -31,3 +16,7 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, p) => {
   log.error(`unhandled promise rejection ${p}: ${reason}`);
 });
+
+bot.init()
+  .then(() => {})
+  .catch(() => process.exit(1));
