@@ -18,5 +18,5 @@ process.on('unhandledRejection', (reason, p) => {
 });
 
 bot.init()
-  .then(() => {})
+  .then(() => log.info('bot running'))
   .catch(() => process.exit(1));

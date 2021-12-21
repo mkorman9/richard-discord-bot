@@ -23,10 +23,11 @@ class Bot {
       this.db = initDatabase();
       this.client = createDiscordClient();
       this.eventsHandler = new EventsHandler();
-      this.registerEventsHandlerActions();
 
       try {
-        await this.client.login(DiscordToken);
+        const onReadyPromise = this.registerEventsHandlerActions();
+        const onLoginPromise = this.client.login(DiscordToken);
+        await Promise.all([onReadyPromise, onLoginPromise]);
       } catch (err) {
         log.error(`error while logging in to Discord API: ${err}`);
         reject(new Error('Discord login error'));
@@ -49,36 +50,39 @@ class Bot {
     this.client.destroy();
   }
 
-  private registerEventsHandlerActions() {
-    this.client.on('ready', async () => {
-      this.eventsHandler.onReady({
-        client: this.client,
-        db: this.db
+  private registerEventsHandlerActions(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.client.on('ready', async () => {
+        resolve();
+        this.eventsHandler.onReady({
+          client: this.client,
+          db: this.db
+        });
       });
-    });
 
-    this.client.on('messageCreate', async (msg: Message) => {
-      if (msg.author.bot) {
-        return;
-      }
+      this.client.on('messageCreate', async (msg: Message) => {
+        if (msg.author.bot) {
+          return;
+        }
 
-      if (msg.channel.type === 'DM') {
-        this.eventsHandler.onDirectMessage({
-          client: this.client,
-          db: this.db,
-          message: msg
-        });
-        return;
-      }
+        if (msg.channel.type === 'DM') {
+          this.eventsHandler.onDirectMessage({
+            client: this.client,
+            db: this.db,
+            message: msg
+          });
+          return;
+        }
 
-      if (msg.channel.type === 'GUILD_TEXT') {
-        this.eventsHandler.onGuildMessage({
-          client: this.client,
-          db: this.db,
-          message: msg
-        });
-        return;
-      }
+        if (msg.channel.type === 'GUILD_TEXT') {
+          this.eventsHandler.onGuildMessage({
+            client: this.client,
+            db: this.db,
+            message: msg
+          });
+          return;
+        }
+      });
     });
   }
 }

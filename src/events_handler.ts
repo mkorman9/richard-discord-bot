@@ -10,8 +10,6 @@ export default class EventsHandler {
   private announcementsChannel: (TextBasedChannels | undefined) = undefined;
 
   async onReady(event: BotReadyEvent) {
-    log.info('bot ready!');
-
     if (AnnouncementsChannel) {
       try {
         const announcementsChannel = await this.verifyAnnouncementsChannel(event.client);
