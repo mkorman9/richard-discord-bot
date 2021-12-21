@@ -1,4 +1,4 @@
-import { scheduleJob, RecurrenceRule } from 'node-schedule';
+import { scheduleJob, RecurrenceRule, gracefulShutdown } from 'node-schedule';
 import type { TextBasedChannels } from 'discord.js';
 
 import { Timezone } from './config';
@@ -22,6 +22,10 @@ export const enableSchedulers = (announcementsChannel: TextBasedChannels) => {
       scheduler.execute(props);
     });
   });
+};
+
+export const disableSchedulers = async () => {
+  await gracefulShutdown();
 };
 
 const createRule = (ruleDefinition: SchedulerRule): RecurrenceRule => {

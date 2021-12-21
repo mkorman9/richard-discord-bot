@@ -34,8 +34,10 @@ class Bot {
     });
   }
 
-  destroy() {
+  async destroy() {
     log.info('bot closing...');
+
+    await this.eventsHandler.onClosing();
 
     DB.close();
     this.client.destroy();

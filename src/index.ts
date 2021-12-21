@@ -2,10 +2,10 @@ import log from './log';
 import './templates';
 import bot from './bot';
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   log.info('received a SIGINT signal');
 
-  bot.destroy();
+  await bot.destroy();
   process.exit(0);
 });
 

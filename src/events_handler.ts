@@ -2,7 +2,7 @@ import { Client, Message, TextBasedChannels } from 'discord.js';
 import { AnnouncementsChannel, MonitoredChannels } from './config';
 import log from './log';
 import { executeCommand } from './commands';
-import { enableSchedulers } from './schedulers';
+import { enableSchedulers, disableSchedulers } from './schedulers';
 import { executeResponders } from './responders';
 
 export default class EventsHandler {
@@ -29,6 +29,10 @@ export default class EventsHandler {
     } else {
       log.info('schedulers will not be enabled because of the missing announcements channel');
     }
+  }
+
+  async onClosing() {
+    await disableSchedulers();
   }
 
   async onGuildMessage(msg: Message) {
